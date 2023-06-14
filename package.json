@@ -15,6 +15,7 @@
 		"@types/express": "^4.17.17",
 		"@types/morgan": "^1.9.4",
 		"@types/node": "^20.3.1",
+		"prisma": "^4.15.0",
 		"ts-node-dev": "^2.0.0",
 		"tsc-alias": "^1.8.6",
 		"tsconfig-paths": "^4.2.0",
