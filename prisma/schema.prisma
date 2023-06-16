@@ -38,16 +38,18 @@ model Client {
 // ]
 
 model User {
-  id                String   @id @default(uuid())
+  id                String  @id @default(uuid())
   name              String
-  email             String   @unique
-  pw_hash           String   @unique
+  email             String  @unique
+  pw_hash           String  @unique
   company           String?
   business_name     String?
   profession        String?
+  RUC               Int?
   verification_code Int
-  created_at        DateTime @default(now())
-  updated_at        DateTime @updatedAt
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 
   projects Project[]
   clients  Client[]
