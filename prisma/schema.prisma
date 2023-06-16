@@ -49,10 +49,9 @@ model User {
   created_at        DateTime @default(now())
   updated_at        DateTime @updatedAt
 
-  projects   Project[]
-  clients    Client[]
-  comments   Comment[]
-  UserSupply UserSupply[]
+  projects Project[]
+  clients  Client[]
+  supplies UserSupply[]
 }
 
 enum Currency {
@@ -153,18 +152,5 @@ model UserSupply {
   updated_at DateTime @updatedAt
 
   user    User?  @relation(fields: [user_id], references: [id])
-  user_id String
-}
-
-model Comment {
-  id      Int    @id @default(autoincrement())
-  cell_id String
-  title   String
-  content String
-
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-
-  author  User   @relation(fields: [user_id], references: [id])
   user_id String
 }
