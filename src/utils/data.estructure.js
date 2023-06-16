@@ -220,6 +220,7 @@ ejemplo_proyecto_nuevo = {
 									//así una y otra vez
 									projectSupplies: [
 										{
+											refId: {
 											id: 'ed09a35d-f18b-4117-8484-6cb19508a58b',
 											refId: 'adsasdasd', //El id del insumo original para poder chequear si esta repetido
 											projectID: 'd3e33763-c4fd-44f3-90f8-fd03c7384157', //ref al proyecto al que pertenece este insumo
@@ -232,7 +233,10 @@ ejemplo_proyecto_nuevo = {
                                                 id: 'asdadsadsadsasd',
                                                 name: 'Mano de Obra',
                                                 index: '47',
-                                            }
+                                            } },
+											quantity: 30,
+											comment: "" //ref a comentario
+
 										},
 									],
 								},
