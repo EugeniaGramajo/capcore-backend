@@ -65,17 +65,18 @@ enum ProjectStatus {
   approved
 }
 
+
 model Project {
   id             String        @id @default(uuid())
   currency       Currency
   direct_cost    Int
   status         ProjectStatus @default(progress)
   address        String
-  distric        String
+  district        String
   province       String
   department     String
   initial_budget Float
-  //workday?
+  workday        Int
   code           String
 
   created_at DateTime @default(now())
