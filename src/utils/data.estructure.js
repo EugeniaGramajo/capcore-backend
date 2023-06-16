@@ -234,7 +234,8 @@ ejemplo_proyecto_nuevo = {
                                                 name: 'Mano de Obra',
                                                 index: '47',
                                             } },
-											quantity: 30
+											quantity: 30,
+											comment: "" //ref a comentario
 
 										},
 									],
