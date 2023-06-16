@@ -103,6 +103,8 @@ model Supply {
   id         String   @id @default(uuid())
   name       String
   price      Float
+  image      String
+  url        String
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 }
