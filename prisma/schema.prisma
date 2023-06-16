@@ -9,3 +9,127 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model Client {
+  id           String @id @default(uuid())
+  full_name    String
+  district     String
+  province     String
+  departament  String
+  organization String
+  RUC          Int
+  contact      Json[]
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  User    User?  @relation(fields: [user_id], references: [id])
+  user_id String
+}
+
+// contact: [
+//   {
+//     name: string,
+//     phone: int,
+//     mail: string,
+//   }
+// ]
+
+model User {
+  id                String @id @default(uuid())
+  username          String @unique
+  full_name         String
+  email             String @unique
+  pw_hash           String @unique
+  organization      String
+  profession        String
+  verification_code Int
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  projects Project[]
+  clients  Client[]
+  comments Comment[]
+}
+
+enum Currency {
+  USD
+  PEN
+}
+
+enum ProjectStatus {
+  progress
+  revision
+  rejected
+  approved
+}
+
+model Project {
+  id             String        @id @default(uuid())
+  currency       Currency
+  direct_cost    Int
+  status         ProjectStatus @default(progress)
+  address        String
+  distric        String
+  province       String
+  department     String
+  initial_budget Float
+  //workday?
+  code           String
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  author    User?  @relation(fields: [author_id], references: [id])
+  author_id String
+
+  supplies ProjectSupply[]
+  comments Comment[]
+}
+
+model BudgetBlocks {
+  id String @id @default(uuid())
+}
+
+model Supply {
+  id         String   @id @default(uuid())
+  name       String
+  price      Float
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model ProjectSupply {
+  id         String   @id @default(uuid())
+  name       String
+  price      Float
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  project    Project? @relation(fields: [project_id], references: [id])
+  project_id String
+}
+
+model UserSupply {
+  id         String   @id @default(uuid())
+  name       String
+  price      Float
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model Comment {
+  id      Int    @id @default(autoincrement())
+  cell_id String
+  title   String
+  content String
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  project    Project @relation(fields: [project_id], references: [id])
+  project_id String
+  author     User    @relation(fields: [user_id], references: [id])
+  user_id    String
+}
