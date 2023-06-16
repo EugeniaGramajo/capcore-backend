@@ -12,7 +12,7 @@ datasource db {
 
 model Client {
   id           String @id @default(uuid())
-  full_name    String
+  name         String
   district     String
   province     String
   departament  String
@@ -65,19 +65,20 @@ enum ProjectStatus {
   approved
 }
 
-
 model Project {
   id             String        @id @default(uuid())
+  name           String
+  permissions    Json
   currency       Currency
+  code           String
   direct_cost    Int
   status         ProjectStatus @default(progress)
   address        String
-  district        String
+  district       String
   province       String
   department     String
   initial_budget Float
   workday        Int
-  code           String
 
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
@@ -86,8 +87,13 @@ model Project {
   author_id String
 
   supplies ProjectSupply[]
-  comments Comment[]
 }
+
+// permission: {
+//  edit : [user_id]
+//  comment : [user_id]
+//  view: [user_id]
+// }
 
 model BudgetBlocks {
   id String @id @default(uuid())
@@ -129,8 +135,6 @@ model Comment {
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
-  project    Project @relation(fields: [project_id], references: [id])
-  project_id String
-  author     User    @relation(fields: [user_id], references: [id])
-  user_id    String
+  author  User   @relation(fields: [user_id], references: [id])
+  user_id String
 }
