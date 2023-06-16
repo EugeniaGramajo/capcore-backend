@@ -49,9 +49,10 @@ model User {
   created_at        DateTime @default(now())
   updated_at        DateTime @updatedAt
 
-  projects Project[]
-  clients  Client[]
-  comments Comment[]
+  projects   Project[]
+  clients    Client[]
+  comments   Comment[]
+  UserSupply UserSupply[]
 }
 
 enum Currency {
@@ -107,20 +108,29 @@ model BudgetBlocks {
 }
 
 model Supply {
-  id               String   @id @default(uuid())
+  id               String @id @default(uuid())
   name             String
   price            Float
   image            String
   url              String
   measurement_unit String
-  created_at       DateTime @default(now())
-  updated_at       DateTime @updatedAt
+  type             String
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 }
 
 model ProjectSupply {
-  id         String   @id @default(uuid())
-  name       String
-  price      Float
+  id               String @id @default(uuid())
+  name             String
+  price            Float
+  image            String
+  url              String
+  measurement_unit String
+  type             String
+
+  source_supply_id String?
+
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
@@ -129,11 +139,21 @@ model ProjectSupply {
 }
 
 model UserSupply {
-  id         String   @id @default(uuid())
-  name       String
-  price      Float
+  id               String @id @default(uuid())
+  name             String
+  price            Float
+  image            String
+  url              String
+  measurement_unit String
+  type             String
+
+  source_supply_id String?
+
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
+
+  user    User?  @relation(fields: [user_id], references: [id])
+  user_id String
 }
 
 model Comment {
