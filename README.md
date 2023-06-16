@@ -1,13 +1,17 @@
-# API ENDPOINTS
+# capcore api
 
-## USER:
+## api endpoints
+
+### USER:
 
 - `GET - /users` descripción del endpoint
 
-## CLIENT:
+### CLIENT:
 
 - `GET - /clients` descripcion del endpoint
 
-## PROJECT:
+### PROJECT:
 
 - `GET - /projects` descripcion del endpoint
+
+## how to run
