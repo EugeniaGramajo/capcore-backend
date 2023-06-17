@@ -1,10 +1,9 @@
 import { Request, Response } from 'express'
-import { PrismaClient } from '@prisma/client'
+import prisma from '../config/prisma-client.config'
 import env from '../config/env.config'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 
-const prisma = new PrismaClient()
 const secretKey = env.secretKey // Cambia esto por una clave secreta más segura
 
 export class UserController {
@@ -13,8 +12,7 @@ export class UserController {
 			const users = await prisma.user.findMany()
 			res.json(users)
 		} catch (error) {
-			console.error('Error retrieving users:', error)
-			res.status(500).json({ error: 'Internal server error' })
+			res.status(500).json({ error })
 		}
 	}
 
@@ -33,19 +31,18 @@ export class UserController {
 
 			res.json(user)
 		} catch (error) {
-			console.error('Error retrieving user:', error)
-			res.status(500).json({ error: 'Internal server error' })
+			res.status(400).json({ error })
 		}
 	}
 
 	async registerUser(req: Request, res: Response) {
 		try {
-			const { username, full_name, email, password, organization, profession } = req.body
-
+			const { name, email, password, business_name, profession } = req.body
+			console.log(req.body)
 			// Verificar si ya existe un usuario con el mismo nombre de usuario o correo electrónico
 			const existingUser = await prisma.user.findFirst({
 				where: {
-					OR: [{ username }, { email }]
+					OR: [{ email }]
 				}
 			})
 
@@ -58,12 +55,12 @@ export class UserController {
 
 			// Crear el usuario en la base de datos
 			const userData = {
-				username,
-				full_name,
+				name,
 				email,
 				pw_hash,
-				organization,
-				profession
+				business_name,
+				profession,
+				verification_code: 0
 			}
 
 			const user = await prisma.user.create({
@@ -75,15 +72,15 @@ export class UserController {
 
 			res.json({ token })
 		} catch (error) {
-			console.error('Error during user registration:', error)
-			res.status(500).json({ error })
+			console.log(error)
+			res.status(400).json({ error: 'Something went wrong' })
 		}
 	}
 
 	async updateUser(req: Request, res: Response) {
 		try {
 			const { id } = req.params
-			const { username, full_name, email, password, organization, profession } = req.body
+			const { name, email, password, business_name, profession } = req.body
 
 			// Verificar si el usuario existe
 			const existingUser = await prisma.user.findUnique({
@@ -101,11 +98,10 @@ export class UserController {
 
 			// Actualizar el usuario en la base de datos
 			const userData = {
-				username: username || existingUser.username,
-				full_name: full_name || existingUser.full_name,
+				name: name || existingUser.name,
 				email: email || existingUser.email,
 				pw_hash,
-				organization: organization || existingUser.organization,
+				business_name: business_name || existingUser.business_name,
 				profession: profession || existingUser.profession
 			}
 
@@ -118,8 +114,7 @@ export class UserController {
 
 			res.json(updatedUser)
 		} catch (error) {
-			console.error('Error updating user:', error)
-			res.status(500).json({ error: 'Internal server error' })
+			res.status(400).json({ error: error })
 		}
 	}
 
@@ -147,19 +142,18 @@ export class UserController {
 
 			res.json({ message: 'User deleted' })
 		} catch (error) {
-			console.error('Error deleting user:', error)
-			res.status(500).json({ error: 'Internal server error' })
+			res.status(400).json({ error })
 		}
 	}
 
 	async loginUser(req: Request, res: Response) {
 		try {
-			const { username, password } = req.body
+			const { email, password } = req.body
 
 			// Buscar al usuario por nombre de usuario
 			const user = await prisma.user.findUnique({
 				where: {
-					username
+					email
 				}
 			})
 
@@ -179,8 +173,7 @@ export class UserController {
 
 			res.json({ token })
 		} catch (error) {
-			console.error('Error during user login:', error)
-			res.status(500).json({ error: 'Internal server error' })
+			res.status(400).json({ error: error })
 		}
 	}
 
@@ -211,8 +204,7 @@ export class UserController {
 				res.json({ success: true })
 			})
 		} catch (error) {
-			console.error('Error during token verification:', error)
-			res.status(500).json({ error: 'Internal server error' })
+			res.status(400).json({ error: error })
 		}
 	}
 }
