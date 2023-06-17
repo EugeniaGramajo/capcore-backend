@@ -16,7 +16,7 @@
 
 ## how to run
 
-- pull repo and `npm i`
+- pull corresponding and `npm i`
 
 - generate prisma client
 
@@ -25,3 +25,13 @@ $ npx prisma generate
 ```
 
 - run `npm run dev`
+
+## Sync schema with db (only during development and prototyping)
+
+If there's any change `schema.prisma` run (this will trigger `npx prisma generate` again):
+
+```bash
+$ npx prisma db push
+```
+
+Read the [command docs](https://www.prisma.io/docs/guides/migrate/prototyping-schema-db-push)

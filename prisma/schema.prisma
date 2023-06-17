@@ -11,20 +11,22 @@ datasource db {
 }
 
 model Client {
-  id           String @id @default(uuid())
-  name         String
-  district     String
-  province     String
-  departament  String
-  organization String
-  RUC          Int
-  contact      Json[]
+  id            String @id @default(uuid())
+  name          String
+  district      String
+  province      String
+  departament   String
+  business_name String
+  RUC           Int
+  contact       Json[]
 
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
-  User    User?  @relation(fields: [user_id], references: [id])
+  user    User?  @relation(fields: [user_id], references: [id])
   user_id String
+
+  projects Project[]
 }
 
 // contact: [
@@ -36,13 +38,14 @@ model Client {
 // ]
 
 model User {
-  id                String @id @default(uuid())
-  username          String @unique
-  full_name         String
-  email             String @unique
-  pw_hash           String @unique
-  organization      String
-  profession        String
+  id                String  @id @default(uuid())
+  name              String
+  email             String  @unique
+  pw_hash           String  @unique
+  company           String?
+  business_name     String?
+  profession        String?
+  RUC               Int?
   verification_code Int
 
   created_at DateTime @default(now())
@@ -50,7 +53,7 @@ model User {
 
   projects Project[]
   clients  Client[]
-  comments Comment[]
+  supplies UserSupply[]
 }
 
 enum Currency {
@@ -86,6 +89,9 @@ model Project {
   author    User?  @relation(fields: [author_id], references: [id])
   author_id String
 
+  client    Client? @relation(fields: [client_id], references: [id])
+  client_id String?
+
   supplies ProjectSupply[]
 }
 
@@ -96,23 +102,38 @@ model Project {
 // }
 
 model BudgetBlocks {
-  id String @id @default(uuid())
+  id   String @id @default(uuid())
+  code String
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 }
 
 model Supply {
-  id         String   @id @default(uuid())
-  name       String
-  price      Float
-  image      String
-  url        String
+
+  id               String @id @default(uuid())
+  name             String
+  price            Float
+  image            String
+  url              String
+  measurement_unit String
+  type             String
+
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 }
 
 model ProjectSupply {
-  id         String   @id @default(uuid())
-  name       String
-  price      Float
+  id               String @id @default(uuid())
+  name             String
+  price            Float
+  image            String
+  url              String
+  measurement_unit String
+  type             String
+
+  source_supply_id String?
+
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
@@ -121,22 +142,19 @@ model ProjectSupply {
 }
 
 model UserSupply {
-  id         String   @id @default(uuid())
-  name       String
-  price      Float
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-}
+  id               String @id @default(uuid())
+  name             String
+  price            Float
+  image            String
+  url              String
+  measurement_unit String
+  type             String
 
-model Comment {
-  id      Int    @id @default(autoincrement())
-  cell_id String
-  title   String
-  content String
+  source_supply_id String?
 
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
-  author  User   @relation(fields: [user_id], references: [id])
+  user    User?  @relation(fields: [user_id], references: [id])
   user_id String
 }
