@@ -130,6 +130,7 @@ model BudgetBlockVersion {
 //supply models
 //--------------
 model Supply {
+
   id               String @id @default(uuid())
   name             String
   price            Float
