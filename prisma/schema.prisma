@@ -35,7 +35,7 @@ model Client {
 //     phone: int,
 //     mail: string,
 //   }
-// ]  
+// ] 
 
 model User {
   id                String  @id @default(uuid())
