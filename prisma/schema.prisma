@@ -110,6 +110,7 @@ model BudgetBlocks {
 }
 
 model Supply {
+
   id               String @id @default(uuid())
   name             String
   price            Float
