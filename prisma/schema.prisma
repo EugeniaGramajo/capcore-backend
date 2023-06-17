@@ -11,20 +11,22 @@ datasource db {
 }
 
 model Client {
-  id           String @id @default(uuid())
-  name         String
-  district     String
-  province     String
-  departament  String
-  organization String
-  RUC          Int
-  contact      Json[]
+  id            String @id @default(uuid())
+  name          String
+  district      String
+  province      String
+  departament   String
+  business_name String
+  RUC           Int
+  contact       Json[]
 
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
-  User    User?  @relation(fields: [user_id], references: [id])
+  user    User?  @relation(fields: [user_id], references: [id])
   user_id String
+
+  projects Project[]
 }
 
 // contact: [
@@ -36,21 +38,22 @@ model Client {
 // ]
 
 model User {
-  id                String @id @default(uuid())
-  username          String @unique
-  full_name         String
-  email             String @unique
-  pw_hash           String @unique
-  organization      String?
+  id                String  @id @default(uuid())
+  name              String
+  email             String  @unique
+  pw_hash           String  @unique
+  company           String?
+  business_name     String?
   profession        String?
-  verification_code Int?
+  RUC               Int?
+  verification_code Int
 
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
   projects Project[]
   clients  Client[]
-  comments Comment[]
+  supplies UserSupply[]
 }
 
 enum Currency {
@@ -86,7 +89,11 @@ model Project {
   author    User?  @relation(fields: [author_id], references: [id])
   author_id String
 
-  supplies ProjectSupply[]
+  client    Client? @relation(fields: [client_id], references: [id])
+  client_id String?
+
+  supplies      ProjectSupply[]
+  budget_blocks BudgetBlock[]
 }
 
 // permission: {
@@ -95,22 +102,57 @@ model Project {
 //  view: [user_id]
 // }
 
-model BudgetBlocks {
-  id String @id @default(uuid())
+model BudgetBlock {
+  id   String @id @default(uuid())
+  code String
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  project    Project?             @relation(fields: [project_id], references: [id])
+  project_id String
+  versions   BudgetBlockVersion[]
 }
 
+model BudgetBlockVersion {
+  id   Int    @id @default(autoincrement())
+  code String
+  name String
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  budget_block    BudgetBlock? @relation(fields: [budget_block_id], references: [id])
+  budget_block_id String?
+}
+
+//--------------
+//supply models
+//--------------
 model Supply {
-  id         String   @id @default(uuid())
-  name       String
-  price      Float
+  id               String @id @default(uuid())
+  name             String
+  price            Float
+  image            String
+  url              String
+  measurement_unit String
+  type             String
+
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 }
 
 model ProjectSupply {
-  id         String   @id @default(uuid())
-  name       String
-  price      Float
+  id               String @id @default(uuid())
+  name             String
+  price            Float
+  image            String
+  url              String
+  measurement_unit String
+  type             String
+
+  source_supply_id String?
+
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
@@ -119,22 +161,25 @@ model ProjectSupply {
 }
 
 model UserSupply {
-  id         String   @id @default(uuid())
-  name       String
-  price      Float
+  id               String @id @default(uuid())
+  name             String
+  price            Float
+  image            String
+  url              String
+  measurement_unit String
+  type             String
+
+  source_supply_id String?
+
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
+
+  user    User?  @relation(fields: [user_id], references: [id])
+  user_id String
 }
 
-model Comment {
-  id      Int    @id @default(autoincrement())
-  cell_id String
-  title   String
-  content String
-
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-
-  author  User   @relation(fields: [user_id], references: [id])
-  user_id String
+model UnifiedIndex {
+  id    String @id @default(uuid())
+  name  String
+  index Int
 }
