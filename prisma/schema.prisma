@@ -92,7 +92,8 @@ model Project {
   client    Client? @relation(fields: [client_id], references: [id])
   client_id String?
 
-  supplies ProjectSupply[]
+  supplies      ProjectSupply[]
+  budget_blocks BudgetBlock[]
 }
 
 // permission: {
@@ -101,14 +102,33 @@ model Project {
 //  view: [user_id]
 // }
 
-model BudgetBlocks {
+model BudgetBlock {
   id   String @id @default(uuid())
   code String
 
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
+
+  project    Project?             @relation(fields: [project_id], references: [id])
+  project_id String
+  versions   BudgetBlockVersion[]
 }
 
+model BudgetBlockVersion {
+  id   Int    @id @default(autoincrement())
+  code String
+  name String
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  budget_block    BudgetBlock? @relation(fields: [budget_block_id], references: [id])
+  budget_block_id String?
+}
+
+//--------------
+//supply models
+//--------------
 model Supply {
   id               String @id @default(uuid())
   name             String
@@ -156,4 +176,10 @@ model UserSupply {
 
   user    User?  @relation(fields: [user_id], references: [id])
   user_id String
+}
+
+model UnifiedIndex {
+  id    String @id @default(uuid())
+  name  String
+  index Int
 }
