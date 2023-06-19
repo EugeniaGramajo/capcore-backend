@@ -6,6 +6,8 @@ const projectsController = new ProjectsController()
 
 projectsRouter.get('/', projectsController.getAllProjects)
 
+projectsRouter.get('/:id', projectsController.getProjectById)
+
 projectsRouter.post('/', projectsController.createProject)
 
 projectsRouter.put('/:id', projectsController.updateProject)
