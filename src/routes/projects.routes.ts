@@ -8,8 +8,8 @@ projectsRouter.get('/', projectsController.getAllProjects)
 
 projectsRouter.post('/', projectsController.createProject)
 
-projectsRouter.put('/', projectsController.updateProject)
+projectsRouter.put('/:id', projectsController.updateProject)
 
-projectsRouter.delete('/', projectsController.deleteProject)
+projectsRouter.delete('/:id', projectsController.deleteProject)
 
 export default projectsRouter

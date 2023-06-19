@@ -26,7 +26,7 @@ export default class ProjectsController {
 				res.status(200).json(projectById)
 			}
 		} catch (error) {
-			res.status(400).json({ error, msg: 'An error has occurred' })
+			res.status(400).json({ error, message: 'An error has occurred' })
 		}
 	}
 
@@ -42,11 +42,39 @@ export default class ProjectsController {
 
 	async updateProject(req: Request, res: Response) {
 		try {
-		} catch (error) {}
+			const { id } = req.params
+			const updatedData = req.body
+
+			const updatedProject = await prisma.project.update({
+				where: {
+					id: id,
+				},
+				data: updatedData,
+			})
+
+			res.status(200).json({
+				message: 'Project updated successfully!',
+				project: updatedProject,
+			})
+		} catch (error) {
+			res.status(400).json({
+				error,
+				message: 'Unable to update the project',
+			})
+		}
 	}
 
 	async deleteProject(req: Request, res: Response) {
-		try {
-		} catch (error) {}
+            try {
+			const { id } = req.params;
+			await prisma.project.delete({
+				where: {
+					id, 
+				},
+			});
+			res.status(200).json({ message: 'Project deleted successfully' });
+		} catch (error) {
+			res.status(500).json({ error, message: 'Unable to delete project' });
+		}
 	}
 }
