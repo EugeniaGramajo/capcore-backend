@@ -13,17 +13,21 @@ export default class ProjectsController {
         }
 	}
 
-/*     async getProjectById(req: Request, res: Response)  {
+    async getProjectById(req: Request, res: Response)  {
         try {
            const { id } = req.query
-           if(id){
-            const projectById = await prisma.project.findUnique({id})
-           }
-            
+   
+            const projectById = await prisma.project.findUnique({
+                  where: {
+                    id: id?.toString()
+                  },
+                })
+           
+            res.status(200).json(projectById)
         } catch (error) {
             
         }
-    } */
+    }
 
 	async createProject(req: Request, res: Response) {
 		try {
