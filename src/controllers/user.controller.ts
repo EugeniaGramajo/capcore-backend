@@ -42,7 +42,7 @@ export class UserController {
 			// Verificar si ya existe un usuario con el mismo nombre de usuario o correo electrónico
 			const existingUser = await prisma.user.findFirst({
 				where: {
-					OR: [{ email:email }]
+					OR: [{ email }]
 				}
 			})
 
