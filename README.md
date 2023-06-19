@@ -20,7 +20,7 @@
 
 - `PUT - /projects/:id` get a project by id
 
-- `DELETE - /projects/:id` delele a project by id
+- `DELETE - /projects/:id` delete a project by id
 
 
 ## how to run
