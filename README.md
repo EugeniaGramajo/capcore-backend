@@ -22,6 +22,18 @@
 
 - `DELETE - /projects/:id` delete a project by id
 
+### BUDGETBLOCK:
+
+- `GET - /budgetBlocks/` get all budgetBlocks
+
+- `GET - /budgetBlocks/:id` get BudgetBlocks by id
+
+- `POST - /budgetBlocks/:projectId` create a budgetBlock related with a project
+
+- `PUT - /budgetBlocks/:id` update a budgetBlock if the user is allowed
+
+- `DELETE - /budgetBlocks/` delete a budgetBlock
+
 
 ## how to run
 
