@@ -12,7 +12,28 @@
 
 ### PROJECT:
 
-- `GET - /projects` descripcion del endpoint
+- `GET - /projects/` get all projects
+
+- `GET - /projects/:id` get a project by id
+
+- `POST - /projects/` post a new project
+
+- `PUT - /projects/:id` get a project by id
+
+- `DELETE - /projects/:id` delete a project by id
+
+### BUDGETBLOCK:
+
+- `GET - /budgetBlocks/` get all budgetBlocks
+
+- `GET - /budgetBlocks/:id` get BudgetBlocks by id
+
+- `POST - /budgetBlocks/:projectId` create a budgetBlock related with a project
+
+- `PUT - /budgetBlocks/:id` update a budgetBlock if the user is allowed
+
+- `DELETE - /budgetBlocks/` delete a budgetBlock
+
 
 ## how to run
 
