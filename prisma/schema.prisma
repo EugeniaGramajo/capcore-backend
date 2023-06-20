@@ -95,6 +95,7 @@ model Project {
 
   supplies      ProjectSupply[]
   budget_blocks BudgetBlock[]
+  budget_block_version BudgetBlockVersion[]
   items         ProjectItem[]
 }
 
@@ -124,6 +125,8 @@ model BudgetBlockVersion {
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
+  project Project?  @relation(fields:[project_id],references:[id])
+  project_id String
   budget_block    BudgetBlock? @relation(fields: [budget_block_id], references: [id])
   budget_block_id String?
   SubBudget       SubBudget[]
