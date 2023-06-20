@@ -23,7 +23,11 @@ export default class ProjectsController {
 			include: {
 			  budget_blocks: {
 				include: {
-				  versions: true,
+				  versions: {
+					include: {
+						SubBudget: true
+					}
+				  },
 				},
 			  },
 			},
