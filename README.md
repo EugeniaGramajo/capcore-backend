@@ -32,8 +32,19 @@
 
 - `PUT - /budgetBlocks/:id` update a budgetBlock if the user is allowed
 
-- `DELETE - /budgetBlocks/` delete a budgetBlock
+- `DELETE - /budgetBlocks/:id` delete a budgetBlock
 
+### BUDGETBLOCKVERSION:
+
+- `GET - /budgetBlocksVersion/` get all budgetBlockVersion
+
+- `GET - /budgetBlocksVersion/:id` get BudgetBlockVersion by id
+
+- `POST - /budgetBlocksVersion/:projectId/:budgetBlockId` create a budgetBlockVersion
+
+- `PUT - /budgetBlocksVersion/:id` update a budgetBlockVersion if the user is allowed
+
+- `DELETE - /budgetBlocksVersion/:id` delete a budgetBlock
 
 ## how to run
 
