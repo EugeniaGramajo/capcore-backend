@@ -12,7 +12,16 @@
 
 ### PROJECT:
 
-- `GET - /projects` descripcion del endpoint
+- `GET - /projects/` get all projects
+
+- `GET - /projects/:id` get a project by id
+
+- `POST - /projects/` post a new project
+
+- `PUT - /projects/:id` get a project by id
+
+- `DELETE - /projects/:id` delete a project by id
+
 
 ## how to run
 

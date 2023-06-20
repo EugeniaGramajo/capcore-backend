@@ -13,7 +13,7 @@ export default class ProjectsController {
 
 	async getProjectById(req: Request, res: Response) {
 		try {
-			const { id } = req.query
+			const { id } = req.params
 
 			const projectById = await prisma.project.findUnique({
 				where: {
