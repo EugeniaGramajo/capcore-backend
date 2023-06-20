@@ -78,7 +78,9 @@ export class UserController {
 	async loginUser(req: Request, res: Response) {
 		try {
 			const { email, password } = req.body
-
+			if (!email || !password) {
+				return res.status(400).json({ error: 'Email and password are required' })
+			}
 			// Buscar al usuario por nombre de usuario
 			const user = await prisma.user.findUnique({
 				where: {
@@ -87,14 +89,14 @@ export class UserController {
 			})
 
 			if (!user) {
-				return res.status(400).json({ error: 'Invalid credentials' })
+				return res.status(400).json({ error: 'Email or password are incorrect' })
 			}
 
 			// Verificar la contraseña
 			const passwordMatch = await bcrypt.compare(password, user.pw_hash)
 
 			if (!passwordMatch) {
-				return res.status(400).json({ error: 'Invalid credentials' })
+				return res.status(400).json({ error: 'Email or password are incorrect' })
 			}
 
 			// Generar el token de autenticación

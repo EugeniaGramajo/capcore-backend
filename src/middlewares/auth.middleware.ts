@@ -6,7 +6,7 @@ import jwt from 'jsonwebtoken'
 interface DecodedToken {
 	id: string
 }
-const secretKey = env.secretKey // Cambia esto por una clave secreta más segura
+const secretKey = env.secretKey
 
 // Middleware para verificar si esta autentificado
 export const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
