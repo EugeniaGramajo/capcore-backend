@@ -126,10 +126,10 @@ model BudgetBlockVersion {
   updated_at DateTime @updatedAt
 
   project Project?  @relation(fields:[project_id],references:[id])
-  project_id String
-  budget_block    BudgetBlock? @relation(fields: [budget_block_id], references: [id])
+  project_id String?
+  budget_block BudgetBlock? @relation(fields: [budget_block_id], references: [id])
   budget_block_id String?
-  SubBudget       SubBudget[]
+  subBudgets SubBudget[]
 }
 
 model SubBudget {
@@ -139,10 +139,11 @@ model SubBudget {
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
-  budget_block_version BudgetBlockVersion @relation(fields: [budgetBlockVersionId], references: [id])
-  budgetBlockVersionId Int
-  titles               Title[]
+  budget_block_version BudgetBlockVersion? @relation(fields: [budget_block_version_id], references: [id])
+  budget_block_version_id Int?
+  titles Title[]
 }
+
 
 model Title {
   id            String        @id @default(uuid())
@@ -161,7 +162,7 @@ model Item {
   supply_ids   String[]
 
   title    Title?  @relation(fields: [title_id], references: [id])
-  title_id String? @default(dbgenerated("root"))
+  title_id String? 
 }
 
 model UserItem {
@@ -172,7 +173,7 @@ model UserItem {
   supply_ids   String[]
 
   title    Title?  @relation(fields: [title_id], references: [id])
-  title_id String? @default(dbgenerated("root"))
+  title_id String? 
   user     User    @relation(fields: [user_id], references: [id])
   user_id  String
 }
@@ -185,7 +186,7 @@ model ProjectItem {
   supply_ids   String[]
 
   title      Title?  @relation(fields: [title_id], references: [id])
-  title_id   String? @default(dbgenerated("root"))
+  title_id   String? 
   project    Project @relation(fields: [project_id], references: [id])
   project_id String
 }

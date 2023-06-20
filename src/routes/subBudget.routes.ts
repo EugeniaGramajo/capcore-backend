@@ -8,7 +8,7 @@ subBudgetRouter.get('/', subBudgetController.getAllSubBudgets)
 
 subBudgetRouter.get('/:id', subBudgetController.getSubBudgetById)
 
-subBudgetRouter.post('/:id/:idBlockBudgetVersion', subBudgetController.createSubBudget)
+subBudgetRouter.post('/:id', subBudgetController.createSubBudget)
 
 subBudgetRouter.put('/:id', subBudgetController.updateSubBudget)
 

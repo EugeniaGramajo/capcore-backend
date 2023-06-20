@@ -1,6 +1,7 @@
 import prisma from '@/config/prisma-client.config'
 import { Request, Response } from 'express'
 
+
 export default class SubBudgetController {
 	async getAllSubBudgets(req: Request, res: Response) {
 		try {
@@ -33,11 +34,21 @@ export default class SubBudgetController {
 
 	async createSubBudget(req: Request, res: Response) {
 		try {
-			const data = req.body
+            const { id } = req.params
+            const idNumber = parseInt(id)
+			const { name } = req.body
+            console.log(id,name)
+            const subBudget = await prisma.subBudget.create({
+                data:{
+                    name,
+                    budget_block_version: {
+                        connect:{ id: idNumber }
+                    }
+                }
 
-			const subBudget = await prisma.subBudget.create({
-				data,
-			})
+              });
+            
+              
 
 			res.status(201).json(subBudget)
 		} catch (error) {

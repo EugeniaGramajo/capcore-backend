@@ -25,7 +25,7 @@ export default class ProjectsController {
 				include: {
 				  versions: {
 					include: {
-						SubBudget: true
+						subBudgets: true
 					}
 				  },
 				},
