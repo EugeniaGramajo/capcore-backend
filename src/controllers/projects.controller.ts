@@ -33,22 +33,39 @@ export default class ProjectsController {
 
 	async createProject(req: Request, res: Response) {
 		try {
-			const dataProject = req.body
-			const project = await prisma.project.create({
-				data: {
-					...dataProject,
-					permissions: {
-						edit: [dataProject.author_id],
-						view: [dataProject.author_id],
-						comment: [dataProject.author_id],
-					},
+		  const dataProject = req.body;
+	  
+		  const project = await prisma.project.create({
+			data: {
+			  ...dataProject,
+			  permissions: {
+				edit: [dataProject.author_id],
+				view: [dataProject.author_id],
+				comment: [dataProject.author_id],
+			  },
+			},
+		  });
+	  
+		  const budgetBlock = await prisma.budgetBlock.create({
+			data: {
+			  code: "01",
+			  project: {
+				connect: {
+				  id: project.id,
 				},
-			})
-			res.status(200).json({ message: 'Project creation succedded!', project })
+			  },
+			},
+		  });
+	  
+		  res.status(200).json({
+			message: 'Project creation succeeded!',
+			project: { ...project, budgetBlock },
+		  });
 		} catch (error) {
-			res.status(400).json({ error, message: 'Unable to create a new project' })
+		  res.status(400).json({ error, message: 'Unable to create a new project' });
 		}
-	}
+	  }
+	  
 
 	async updateProject(req: Request, res: Response) {
 		try {

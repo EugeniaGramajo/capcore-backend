@@ -16,7 +16,7 @@
 
 - `GET - /projects/:id` get a project by id
 
-- `POST - /projects/` post a new project
+- `POST - /projects/` post a new project with a budgetBlock associated
 
 - `PUT - /projects/:id` get a project by id
 
