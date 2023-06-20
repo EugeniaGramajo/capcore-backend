@@ -1,4 +1,5 @@
 import prisma from '@/config/prisma-client.config'
+import ProjectPermission from '@/utils/interfaces'
 import { Request, Response } from 'express'
 
 export default class ProjectsController {
@@ -33,7 +34,16 @@ export default class ProjectsController {
 	async createProject(req: Request, res: Response) {
 		try {
 			const dataProject = req.body
-			const project = await prisma.project.create({ data: dataProject })
+			const project = await prisma.project.create({
+				data: {
+					...dataProject,
+					permissions: {
+						edit: [dataProject.author_id],
+						view: [dataProject.author_id],
+						comment: [dataProject.author_id],
+					},
+				},
+			})
 			res.status(200).json({ message: 'Project creation succedded!', project })
 		} catch (error) {
 			res.status(400).json({ error, message: 'Unable to create a new project' })
@@ -43,19 +53,26 @@ export default class ProjectsController {
 	async updateProject(req: Request, res: Response) {
 		try {
 			const { id } = req.params
+			const { editor } = req.params
 			const updatedData = req.body
 
-			const updatedProject = await prisma.project.update({
-				where: {
-					id: id,
-				},
-				data: updatedData,
-			})
+			const projectEditPermission = await prisma.project.findUnique({ where: { id } })
+			const permission = projectEditPermission?.permissions as unknown as ProjectPermission
+			if (permission.edit.includes(editor)) {
+				const updatedProject = await prisma.project.update({
+					where: {
+						id: id,
+					},
+					data: updatedData,
+				})
 
-			res.status(200).json({
-				message: 'Project updated successfully!',
-				project: updatedProject,
-			})
+				res.status(200).json({
+					message: 'Project updated successfully!',
+					project: updatedProject,
+				})
+			} else {
+				res.status(400).json({ message: 'You do not have permission to edit this project.' })
+			}
 		} catch (error) {
 			res.status(400).json({
 				error,
@@ -65,16 +82,16 @@ export default class ProjectsController {
 	}
 
 	async deleteProject(req: Request, res: Response) {
-            try {
-			const { id } = req.params;
+		try {
+			const { id } = req.params
 			await prisma.project.delete({
 				where: {
-					id, 
+					id,
 				},
-			});
-			res.status(200).json({ message: 'Project deleted successfully' });
+			})
+			res.status(200).json({ message: 'Project deleted successfully' })
 		} catch (error) {
-			res.status(500).json({ error, message: 'Unable to delete project' });
+			res.status(500).json({ error, message: 'Unable to delete project' })
 		}
 	}
 }

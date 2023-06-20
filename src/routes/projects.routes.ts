@@ -10,7 +10,7 @@ projectsRouter.get('/:id', projectsController.getProjectById)
 
 projectsRouter.post('/', projectsController.createProject)
 
-projectsRouter.put('/:id', projectsController.updateProject)
+projectsRouter.put('/:id/:editor', projectsController.updateProject)
 
 projectsRouter.delete('/:id', projectsController.deleteProject)
 
