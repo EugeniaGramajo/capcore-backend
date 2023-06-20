@@ -14,22 +14,31 @@ export default class ProjectsController {
 
 	async getProjectById(req: Request, res: Response) {
 		try {
-			const { id } = req.params
-
-			const projectById = await prisma.project.findUnique({
-				where: {
-					id: id?.toString(),
+		  const { id } = req.params;
+	  
+		  const projectById = await prisma.project.findUnique({
+			where: {
+			  id: id?.toString(),
+			},
+			include: {
+			  budget_blocks: {
+				include: {
+				  versions: true,
 				},
-			})
-			if (!projectById) {
-				res.status(400).json('Project not found!')
-			} else {
-				res.status(200).json(projectById)
-			}
+			  },
+			},
+		  });
+	  
+		  if (!projectById) {
+			res.status(404).json({ message: 'Project not found!' });
+		  } else {
+			res.status(200).json(projectById);
+		  }
 		} catch (error) {
-			res.status(400).json({ error, message: 'An error has occurred' })
+		  res.status(400).json({ error, message: 'An error has occurred' });
 		}
-	}
+	  }
+	  
 
 	async createProject(req: Request, res: Response) {
 		try {
@@ -57,9 +66,26 @@ export default class ProjectsController {
 				},
 			})
 
+			const budgetBlockVersion = await prisma.budgetBlockVersion.create({
+				data: {
+					name: dataProject.name,
+					code: '01',
+					project: {
+						connect: {
+							id: project.id,
+						},
+					},
+					budget_block: {
+						connect: {
+							id: budgetBlock.id,
+						},
+					},
+				},
+			})
+
 			res.status(200).json({
 				message: 'Project creation succeeded!',
-				project: { ...project, budgetBlock },
+				project: { ...project, budgetBlock, budgetBlockVersion },
 			})
 		} catch (error) {
 			res.status(400).json({ error, message: 'Unable to create a new project' })
