@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import { UserController } from '../controllers/user.controller'
-
+import { authMiddleware } from '@/middlewares/auth.middleware'
 const userRouter = Router()
 const userController = new UserController()
 
@@ -10,14 +10,11 @@ userRouter.post('/register', userController.registerUser)
 // Ruta para iniciar sesión
 userRouter.post('/login', userController.loginUser)
 
-// Ruta para verificar el token de autenticación
-userRouter.post('/verify-token', userController.verifyToken)
-
 // Ruta para obtener todos los usuarios
-userRouter.get('/', userController.getUsers)
+userRouter.get('/', authMiddleware, userController.getUsers)
 
 // Ruta para obtener un usuario por su ID
-userRouter.get('/:id', userController.getUserById)
+userRouter.get('/:id', authMiddleware, userController.getUserById)
 
 // Ruta para actualizar un usuario
 userRouter.put('/:id', userController.updateUser)
