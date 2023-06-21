@@ -1,4 +1,4 @@
-import env from '@/config/env.config';
+import env from '@/config/env.config'
 import axios from 'axios'
 import { Request, Response } from 'express'
 import prisma from '../config/prisma-client.config'
@@ -69,3 +69,4 @@ export default class SupplyController{
 		}
     }
 }
+
