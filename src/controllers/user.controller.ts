@@ -4,7 +4,7 @@ import env from '../config/env.config'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 
-const secretKey = env.secretKey // Cambia esto por una clave secreta más segura
+const secretKey = env.secretKey
 
 export class UserController {
 	async getUsers(req: Request, res: Response) {
@@ -38,7 +38,6 @@ export class UserController {
 	async registerUser(req: Request, res: Response) {
 		try {
 			const { name, email, password, business_name, profession } = req.body
-			console.log(req.body)
 			// Verificar si ya existe un usuario con el mismo nombre de usuario o correo electrónico
 			const existingUser = await prisma.user.findFirst({
 				where: {
@@ -47,7 +46,7 @@ export class UserController {
 			})
 
 			if (existingUser) {
-				return res.status(400).json({ error: 'Username or email already exists' })
+				return res.status(400).json({ error: 'Email already exists' })
 			}
 
 			// Generar el hash de la contraseña
@@ -69,14 +68,44 @@ export class UserController {
 
 			// Generar el token de autenticación
 			const token = jwt.sign({ userId: user.id }, secretKey)
-
-			res.json({ token })
+			res.json({ token, user })
 		} catch (error) {
 			console.log(error)
 			res.status(400).json({ error: 'Something went wrong' })
 		}
 	}
 
+	async loginUser(req: Request, res: Response) {
+		try {
+			const { email, password } = req.body
+			if (!email || !password) {
+				return res.status(400).json({ error: 'Email and password are required' })
+			}
+			// Buscar al usuario por nombre de usuario
+			const user = await prisma.user.findUnique({
+				where: {
+					email
+				}
+			})
+
+			if (!user) {
+				return res.status(400).json({ error: 'Email or password are incorrect' })
+			}
+
+			// Verificar la contraseña
+			const passwordMatch = await bcrypt.compare(password, user.pw_hash)
+
+			if (!passwordMatch) {
+				return res.status(400).json({ error: 'Email or password are incorrect' })
+			}
+
+			// Generar el token de autenticación
+			const token = jwt.sign({ userId: user.id }, secretKey)
+			res.json({ token, user })
+		} catch (error) {
+			res.status(400).json({ error: error })
+		}
+	}
 	async updateUser(req: Request, res: Response) {
 		try {
 			const { id } = req.params
@@ -143,68 +172,6 @@ export class UserController {
 			res.json({ message: 'User deleted' })
 		} catch (error) {
 			res.status(400).json({ error })
-		}
-	}
-
-	async loginUser(req: Request, res: Response) {
-		try {
-			const { email, password } = req.body
-
-			// Buscar al usuario por nombre de usuario
-			const user = await prisma.user.findUnique({
-				where: {
-					email
-				}
-			})
-
-			if (!user) {
-				return res.status(400).json({ error: 'Invalid credentials' })
-			}
-
-			// Verificar la contraseña
-			const passwordMatch = await bcrypt.compare(password, user.pw_hash)
-
-			if (!passwordMatch) {
-				return res.status(400).json({ error: 'Invalid credentials' })
-			}
-
-			// Generar el token de autenticación
-			const token = jwt.sign({ userId: user.id }, secretKey)
-
-			res.json({ token })
-		} catch (error) {
-			res.status(400).json({ error: error })
-		}
-	}
-
-	async verifyToken(req: Request, res: Response) {
-		try {
-			const { token } = req.body
-
-			// Verificar el token de autenticación
-			jwt.verify(token, secretKey, async (err: any, decoded: any) => {
-				if (err) {
-					return res.status(401).json({ error: 'Invalid token' })
-				}
-
-				const userId = decoded.userId
-
-				// Buscar al usuario en la base de datos
-				const user = await prisma.user.findUnique({
-					where: {
-						id: userId
-					}
-				})
-
-				if (!user) {
-					return res.status(401).json({ error: 'Invalid token' })
-				}
-
-				// Token válido, enviar respuesta exitosa
-				res.json({ success: true })
-			})
-		} catch (error) {
-			res.status(400).json({ error: error })
 		}
 	}
 }
