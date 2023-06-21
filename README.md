@@ -46,6 +46,18 @@
 
 - `DELETE - /budgetBlocksVersion/:id` delete a budgetBlock
 
+### SUBBUDGET
+
+- `GET - /subBudget/` get all subBudgets
+
+- `GET - /subBudget/:id` get a subbudget by id
+
+- `POST - /subBudget/:id` need a budgetblockversion to create a new subbudget
+
+- `PUT - /subBudget/` update a subbudget 
+
+- `DELETE - /subBudget/` delete a subbudget
+
 ## how to run
 
 - pull corresponding and `npm i`
