@@ -150,7 +150,6 @@ model Title {
   name          String
   sub_budget    SubBudget?    @relation(fields: [sub_budget_id], references: [id])
   sub_budget_id Int?
-  items         Item[]
   UserItem      UserItem[]
   ProjectItem   ProjectItem[]
 }
@@ -159,18 +158,16 @@ model Item {
   id   Int    @id @default(autoincrement())
   name String
 
-  sub_item_ids String[]
-  supply_ids   String[]
+  supply_ids String[]
+  items_ids Int[]
 
-  title    Title?  @relation(fields: [title_id], references: [id])
-  title_id String? 
 }
 
 model UserItem {
   id   Int    @id @default(autoincrement())
   name String
 
-  sub_item_ids String[]
+  items_ids String[]
   supply_ids   String[]
 
   title    Title?  @relation(fields: [title_id], references: [id])
@@ -183,7 +180,7 @@ model ProjectItem {
   id   Int    @id @default(autoincrement())
   name String
 
-  sub_item_ids String[]
+  item_ids     String[]
   supply_ids   String[]
 
   title      Title?  @relation(fields: [title_id], references: [id])
@@ -209,6 +206,7 @@ model Supply {
 
   unified_index    UnifiedIndex? @relation(fields: [unified_index_id], references: [id])
   unified_index_id String?
+  
 }
 
 model ProjectSupply {
