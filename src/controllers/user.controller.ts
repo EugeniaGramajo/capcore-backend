@@ -9,7 +9,11 @@ const secretKey = env.secretKey
 export class UserController {
 	async getUsers(req: Request, res: Response) {
 		try {
-			const users = await prisma.user.findMany()
+			const users = await prisma.user.findMany({
+				include: {
+					clients: true
+				}
+			})
 			res.json(users)
 		} catch (error) {
 			res.status(500).json({ error })

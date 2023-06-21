@@ -38,7 +38,6 @@ export class ClientController {
 					user: { connect: { id: userId } }
 				}
 			})
-
 			res.status(201).json(client)
 		} catch (error) {
 			console.log(error)
