@@ -256,7 +256,8 @@ model UnifiedIndex {
   name  String
   index Int
   
-  supplies Supply[]
-  userSupplies UserSupply[]
+  supplies        Supply[]
+  userSupplies    UserSupply[]
+  projectSupplies ProjectSupply[] 
 
 }

@@ -66,7 +66,7 @@ export const getPinturaScraping = async (): Promise<any> => {
 				let infoSupply = product.map(function(supply: any) {
 					return {
 						name: supply.name,
-						price: parseFloat(supply.price.replace('S/ ', '')),
+						price: parseFloat(supply?.price.replace('S/ ', '')),
 						image: supply.image,
 						url: supply.url,
 						measurement_unit: '4L',
@@ -74,6 +74,8 @@ export const getPinturaScraping = async (): Promise<any> => {
 						unifiedIndex_id: UI.id
 					}
 				})
+				console.log(infoSupply)
+				console.log(typeof infoSupply)
 				await prisma.supply.createMany({
 					data: infoSupply
 				})
