@@ -18,7 +18,7 @@ model Client {
   departament   String
   business_name String
   RUC           Int
-  contact       Json[]
+  contact       Json
 
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
@@ -54,6 +54,7 @@ model User {
   projects Project[]
   clients  Client[]
   supplies UserSupply[]
+  items    UserItem[]
 }
 
 enum Currency {
@@ -94,6 +95,8 @@ model Project {
 
   supplies      ProjectSupply[]
   budget_blocks BudgetBlock[]
+  budget_block_version BudgetBlockVersion[]
+  items         ProjectItem[]
 }
 
 // permission: {
@@ -122,8 +125,68 @@ model BudgetBlockVersion {
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
-  budget_block    BudgetBlock? @relation(fields: [budget_block_id], references: [id])
+  project Project?  @relation(fields:[project_id],references:[id])
+  project_id String?
+  budget_block BudgetBlock? @relation(fields: [budget_block_id], references: [id])
   budget_block_id String?
+  subBudgets SubBudget[]
+}
+
+model SubBudget {
+  id   Int    @id @default(autoincrement())
+  name String
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  budget_block_version BudgetBlockVersion? @relation(fields: [budget_block_version_id], references: [id])
+  budget_block_version_id Int?
+  titles Title[]
+}
+
+
+model Title {
+  id            String        @id @default(uuid())
+  name          String
+  sub_budget    SubBudget?    @relation(fields: [sub_budget_id], references: [id])
+  sub_budget_id Int?
+  UserItem      UserItem[]
+  ProjectItem   ProjectItem[]
+}
+
+model Item {
+  id   Int    @id @default(autoincrement())
+  name String
+
+  supply_ids String[]
+  items_ids Int[]
+
+}
+
+model UserItem {
+  id   Int    @id @default(autoincrement())
+  name String
+
+  items_ids String[]
+  supply_ids   String[]
+
+  title    Title?  @relation(fields: [title_id], references: [id])
+  title_id String? 
+  user     User    @relation(fields: [user_id], references: [id])
+  user_id  String
+}
+
+model ProjectItem {
+  id   Int    @id @default(autoincrement())
+  name String
+
+  item_ids     String[]
+  supply_ids   String[]
+
+  title      Title?  @relation(fields: [title_id], references: [id])
+  title_id   String? 
+  project    Project @relation(fields: [project_id], references: [id])
+  project_id String
 }
 
 //--------------
@@ -140,6 +203,10 @@ model Supply {
 
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
+
+  unified_index    UnifiedIndex? @relation(fields: [unified_index_id], references: [id])
+  unified_index_id String?
+  
 }
 
 model ProjectSupply {
@@ -156,8 +223,10 @@ model ProjectSupply {
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
-  project    Project? @relation(fields: [project_id], references: [id])
-  project_id String
+  unified_index    UnifiedIndex? @relation(fields: [unified_index_id], references: [id])
+  unified_index_id String?
+  project          Project?      @relation(fields: [project_id], references: [id])
+  project_id       String
 }
 
 model UserSupply {
@@ -174,12 +243,17 @@ model UserSupply {
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
-  user    User?  @relation(fields: [user_id], references: [id])
-  user_id String
+  unified_index    UnifiedIndex? @relation(fields: [unified_index_id], references: [id])
+  unified_index_id String?
+  user             User?         @relation(fields: [user_id], references: [id])
+  user_id          String
 }
 
 model UnifiedIndex {
-  id    String @id @default(uuid())
-  name  String
-  index Int
+  id            String          @id @default(uuid())
+  name          String
+  index         Int
+  supplies      Supply[]
+  ProjectSupply ProjectSupply[]
+  UserSupply    UserSupply[]
 }

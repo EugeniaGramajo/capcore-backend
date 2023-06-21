@@ -12,7 +12,51 @@
 
 ### PROJECT:
 
-- `GET - /projects` descripcion del endpoint
+- `GET - /projects/` get all projects
+
+- `GET - /projects/:id` get a project by id
+
+- `POST - /projects/` post a new project with a budgetBlock associated
+
+- `PUT - /projects/:id` get a project by id
+
+- `DELETE - /projects/:id` delete a project by id
+
+### BUDGETBLOCK:
+
+- `GET - /budgetBlocks/` get all budgetBlocks
+
+- `GET - /budgetBlocks/:id` get BudgetBlocks by id
+
+- `POST - /budgetBlocks/:projectId` create a budgetBlock related with a project
+
+- `PUT - /budgetBlocks/:id` update a budgetBlock if the user is allowed
+
+- `DELETE - /budgetBlocks/:id` delete a budgetBlock
+
+### BUDGETBLOCKVERSION:
+
+- `GET - /budgetBlocksVersion/` get all budgetBlockVersion
+
+- `GET - /budgetBlocksVersion/:id` get BudgetBlockVersion by id
+
+- `POST - /budgetBlocksVersion/:projectId/:budgetBlockId` create a budgetBlockVersion
+
+- `PUT - /budgetBlocksVersion/:id` update a budgetBlockVersion if the user is allowed
+
+- `DELETE - /budgetBlocksVersion/:id` delete a budgetBlock
+
+### SUBBUDGET
+
+- `GET - /subBudget/` get all subBudgets
+
+- `GET - /subBudget/:id` get a subbudget by id
+
+- `POST - /subBudget/:id` need a budgetblockversion to create a new subbudget
+
+- `PUT - /subBudget/` update a subbudget 
+
+- `DELETE - /subBudget/` delete a subbudget
 
 ## how to run
 

@@ -9,7 +9,6 @@ const app = express()
 app.use(cors({ credentials: true }))
 app.use(morgan('dev'))
 app.use(express.json())
-
 injectRoutes(app)
 
 export default app
@@ -21,8 +20,8 @@ function injectRoutes(appInstance: express.Application) {
   The routes are then added to the `appInstance` object.
   */
 	readdirSync(__dirname + '/routes')
-		.map((fileName) => fileName.split('.').shift())
-		.forEach(async (routeName) => {
+		.map(fileName => fileName.split('.').shift())
+		.forEach(async routeName => {
 			const routeModule = await import(`./routes/${routeName}.routes`)
 			appInstance.use(`/api/${routeName}`, routeModule.default)
 		})
