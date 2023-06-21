@@ -204,9 +204,10 @@ model Supply {
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
-  unified_index    UnifiedIndex? @relation(fields: [unified_index_id], references: [id])
-  unified_index_id String?
-  
+
+  unifiedindex UnifiedIndex? @relation(fields: [unifiedIndex_id], references: [id])
+  unifiedIndex_id String
+
 }
 
 model ProjectSupply {
@@ -243,17 +244,19 @@ model UserSupply {
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
-  unified_index    UnifiedIndex? @relation(fields: [unified_index_id], references: [id])
-  unified_index_id String?
-  user             User?         @relation(fields: [user_id], references: [id])
-  user_id          String
+  user    User?  @relation(fields: [user_id], references: [id])
+  user_id String
+
+  unifiedindex UnifiedIndex? @relation(fields: [unifiedIndex_id], references: [id])
+  unifiedIndex_id String
 }
 
 model UnifiedIndex {
-  id            String          @id @default(uuid())
-  name          String
-  index         Int
-  supplies      Supply[]
-  ProjectSupply ProjectSupply[]
-  UserSupply    UserSupply[]
+  id    String @id @default(uuid())
+  name  String
+  index Int
+  
+  supplies Supply[]
+  userSupplies UserSupply[]
+
 }
