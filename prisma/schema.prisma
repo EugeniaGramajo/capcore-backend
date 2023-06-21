@@ -147,6 +147,7 @@ model SubBudget {
 
 model Title {
   id            String        @id @default(uuid())
+  name          String
   sub_budget    SubBudget?    @relation(fields: [sub_budget_id], references: [id])
   sub_budget_id Int?
   items         Item[]
