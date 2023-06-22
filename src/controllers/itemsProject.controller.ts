@@ -21,24 +21,52 @@ export default class ItemsProjectController {
 		}
 	}
 
-	async createItemProject(req: Request, res: Response) {
+	async createItemProjectForASubBudget(req: Request, res: Response) {
 		try {
-			const { id } = req.params
-			const { name } = req.body
+			const { idTitle } = req.params
+			const { idBudgetBlockVersion } = req.params
+			const { name, measuring } = req.body
+
+			const existingItemProject = await prisma.projectItem.findFirst({
+				where: {
+					name,
+					},
+			})
+
+			if (existingItemProject) {
+				res.status(400).json({ message: 'ItemProject already exists in the project' })
+				return
+			}
+
+			const title = await prisma.title.findFirst({
+				where: { id:idTitle },
+			})
+
+			if (!title) {
+				res.status(400).json({ message: 'Title does not exist in the project' })
+				return
+			}
+
 			const itemProjectCreated = await prisma.projectItem.create({
 				data: {
-					name,
-					project: {
+					name: name,
+					budgetBlockVersion: {
 						connect: {
-							id,
+							id: parseInt(idBudgetBlockVersion),
 						},
 					},
+					measuring
 				},
 			})
+
 			res.status(200).json(itemProjectCreated)
 		} catch (error) {
-			res.status(400).json({ error, message: 'ItemProject created' })
+			res.status(400).json({ error, message: 'ItemProject was not created' })
 		}
+	}
+
+	async createNewTitleForATitle(req: Request, res: Response) {
+
 	}
 
 	async updateItemProject(req: Request, res: Response) {

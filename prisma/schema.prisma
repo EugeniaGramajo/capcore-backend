@@ -96,7 +96,6 @@ model Project {
   supplies      ProjectSupply[]
   budget_blocks BudgetBlock[]
   budget_block_version BudgetBlockVersion[]
-  items         ProjectItem[]
 }
 
 // permission: {
@@ -130,6 +129,7 @@ model BudgetBlockVersion {
   budget_block BudgetBlock? @relation(fields: [budget_block_id], references: [id])
   budget_block_id String?
   subBudgets SubBudget[]
+  projectItems ProjectItem[]
 }
 
 model SubBudget {
@@ -146,13 +146,19 @@ model SubBudget {
 
 
 model Title {
-  id            String        @id @default(uuid())
-  name          String
-  sub_budget    SubBudget?    @relation(fields: [sub_budget_id], references: [id])
-  sub_budget_id Int?
-  UserItem      UserItem[]
-  ProjectItem   ProjectItem[]
+  id             String        @id @default(uuid())
+  name           String
+  project_items  String[]
+  title_ids      String[]
+  parent_title   Title?        @relation("ChildTitles", fields: [title_id], references: [id])
+  title_id       String?
+  child_titles   Title[]       @relation("ChildTitles")
+  sub_budget     SubBudget?    @relation(fields: [sub_budget_id], references: [id])
+  sub_budget_id  Int?
+  UserItem       UserItem[]
+
 }
+
 
 model Item {
   id   Int    @id @default(autoincrement())
@@ -179,14 +185,13 @@ model UserItem {
 model ProjectItem {
   id   Int    @id @default(autoincrement())
   name String
+  measuring   Int?
 
   item_ids     String[]
   supply_ids   String[]
 
-  title      Title?  @relation(fields: [title_id], references: [id])
-  title_id   String? 
-  project    Project @relation(fields: [project_id], references: [id])
-  project_id String
+  budgetBlockVersion  BudgetBlockVersion? @relation(fields: [budgetBlockVersion_id], references: [id])
+  budgetBlockVersion_id Int?
 }
 
 //--------------

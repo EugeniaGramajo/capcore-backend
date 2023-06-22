@@ -23,13 +23,13 @@ export default class TitleController {
 
   async createNewTitle(req: Request, res: Response) {
     try {
-      const { id } = req.params;
+      const { subBudgetId } = req.params;
       const { name } = req.body;
       const newTitle = await prisma.title.create({ data: { 
         name,
         sub_budget: {
             connect: {
-                id:parseInt(id)
+                id:parseInt(subBudgetId)
             }
         }
     } });
@@ -38,6 +38,37 @@ export default class TitleController {
       res.status(400).json({ error, message: 'Unable to create a new title' });
     }
   }
+
+  async createTitleForTitle(req: Request, res: Response) {
+    try {
+      const { titleId } = req.params;
+      const { name } = req.body;
+  
+      const parentTitle = await prisma.title.findUnique({ where: { id:titleId } });
+  
+      if (!parentTitle) {
+        return res.status(404).json({ message: 'Parent title not found' });
+      }
+  
+      const newTitle = await prisma.title.create({
+        data: {
+          name
+        },
+      });
+
+      await prisma.title.update({
+        where: { id:titleId },
+        data: {title_ids: {
+          push: newTitle.id
+        }}
+      })
+  
+      res.status(201).json(newTitle);
+    } catch (error) {
+      res.status(400).json({ error, message: 'Unable to create a new title' });
+    }
+  }
+  
 
   async updateTitle(req: Request, res: Response) {
     try {
