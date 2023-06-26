@@ -13,10 +13,12 @@ datasource db {
 model Client {
   id            String @id @default(uuid())
   name          String
+  address       String
   district      String
   province      String
   departament   String
   business_name String
+  image         String @default("https://icons.veryicon.com/png/o/internet--web/prejudice/user-128.png")
   RUC           Int
   contact       Json
 
@@ -148,13 +150,19 @@ model SubBudget {
 model Title {
   id             String        @id @default(uuid())
   name           String
-  project_items  String[]
+  project_items  Int[]
   title_ids      String[]
+
+
   parent_title   Title?        @relation("ChildTitles", fields: [title_id], references: [id])
   title_id       String?
   child_titles   Title[]       @relation("ChildTitles")
+  child_projectItems ProjectItem[] @relation("TitleToProjectItems")
+
   sub_budget     SubBudget?    @relation(fields: [sub_budget_id], references: [id])
   sub_budget_id  Int?
+
+
   UserItem       UserItem[]
 
 }
@@ -189,6 +197,14 @@ model ProjectItem {
 
   item_ids     String[]
   supply_ids   String[]
+
+  title_id     String?
+  title        Title? @relation("TitleToProjectItems", fields: [title_id], references: [id])
+
+  parentProjectItem ProjectItem? @relation("ChildProjectItems", fields: [parentProject_id], references: [id])
+  parentProject_id Int?
+
+  childProjectItems   ProjectItem[] @relation("ChildProjectItems")
 
   budgetBlockVersion  BudgetBlockVersion? @relation(fields: [budgetBlockVersion_id], references: [id])
   budgetBlockVersion_id Int?

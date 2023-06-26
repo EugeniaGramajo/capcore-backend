@@ -8,9 +8,9 @@ itemsProjectRouter.get('/', itemsProjectController.getAllItemProject)
 
 itemsProjectRouter.get('/:id', itemsProjectController.getItemProjectById)
 
-itemsProjectRouter.post('/:idTitle/:idBudgetBlockVersion', itemsProjectController.createItemProjectForASubBudget)
+itemsProjectRouter.post('/:itemProjectId/version/:versionId', itemsProjectController.createItemProjectForItemProject)
 
-itemsProjectRouter.post('/', itemsProjectController.createNewTitleForATitle) 
+itemsProjectRouter.post('/title/:idTitle', itemsProjectController.createNewItemProjectForATitle) 
 
 itemsProjectRouter.put('/:id', itemsProjectController.updateItemProject)
 

@@ -1,5 +1,5 @@
 import prisma from "@/config/prisma-client.config";
-import { Title } from "@prisma/client";
+import { ProjectItem, Title } from "@prisma/client";
 
 export async function titleRecursive(id: string): Promise<Title> {
   const titleFound = await prisma.title.findUnique({ where: { id },include:{child_titles:true} });
@@ -20,6 +20,24 @@ export async function titleRecursive(id: string): Promise<Title> {
   return titleFound;
 }
 
-export async function itemRecursive(id:string) {
-    
+export async function itemProjectRecursive(id: number): Promise<ProjectItem> {
+  const itemProject = await prisma.projectItem.findUnique({
+    where: { id },
+    include: { childProjectItems: true },
+  });
+
+  if (!itemProject) {
+    throw new Error("Project item not found");
+  }
+
+  const nestedItemProject: ProjectItem[] = [];
+
+  for (const itemId of itemProject.item_ids) {
+    const nestedItem = await itemProjectRecursive(parseInt(itemId));
+    nestedItemProject.push(nestedItem);
+  }
+
+  itemProject.childProjectItems = nestedItemProject;
+
+  return itemProject;
 }
