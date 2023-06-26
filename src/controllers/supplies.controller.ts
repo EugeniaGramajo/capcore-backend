@@ -2,7 +2,6 @@ import env from '../config/env.config'
 import axios from 'axios'
 import { Request, Response } from 'express'
 import prisma from '../config/prisma-client.config'
-import { getArgentinaTime } from '../helpers/webScrapingTest'
 const URL_UI = 'http://localhost:3001/api/unifiedIndex/UI'
 const URL_parse = `https://parsehub.com/api/v2/projects/${env.promart_token_pintura}/last_ready_run/data?api_key=${env.api_key}`
 export default class SupplyController {
@@ -73,14 +72,6 @@ export default class SupplyController {
 				return res.status(404).json({ error: 'Supply not found' })
 			}
 			res.json(supply)
-		} catch (error) {
-			res.status(400).json({ error })
-		}
-	}
-	async getArgentinaTime(req: Request, res: Response) {
-		try {
-			const time = await getArgentinaTime()
-			res.json({ ArgentinaTime: time })
 		} catch (error) {
 			res.status(400).json({ error })
 		}

@@ -1,28 +1,20 @@
 import cron from 'node-cron'
-import { getPinturaScraping, getArgentinaTime } from './webScrapingTest'
+import {
+	getCementoPromartScrapping,
+	getLadrilloPromartScrapping,
+	getPinturaPromartScrapping
+} from './webScrapingTest'
 
 export const startScheduler = (): void => {
-	cron.schedule('*/15 * * * * *', async () => {
+	//Setea el intervalo en este caso es cada 10minutos
+	cron.schedule('*/10 * * * *', async () => {
 		try {
-			const data = await getArgentinaTime()
-			console.log(`Cada 15 segundos: Argentina Time : ${data}`)
-		} catch (error) {
-			console.error('Error executing getArgentinaTime:', error)
-		}
-	})
-
-	cron.schedule('*/30 * * * * *', async () => {
-		try {
-			await getPinturaScraping()
+			await getPinturaPromartScrapping()
+			await getCementoPromartScrapping()
+			await getLadrilloPromartScrapping()
+			console.log('Se actualizo pintura, ladrillo y cemento')
 		} catch (error) {
 			console.error('Error executing getPinturaScraping:', error)
 		}
 	})
-	// cron.schedule('*/30 * * * * *', async () => {
-	// 	try {
-	// 		await getCementoScraping()
-	// 	} catch (error) {
-	// 		console.error('Error executing getCementoScraping:', error)
-	// 	}
-	// })
 }

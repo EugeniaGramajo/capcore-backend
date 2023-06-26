@@ -216,7 +216,7 @@ model Supply {
   name             String
   price            Float
   image            String
-  url              String
+  url              String @unique
   measurement_unit String
   type             String
 
