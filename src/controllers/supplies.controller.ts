@@ -6,6 +6,15 @@ import { getArgentinaTime } from '../helpers/webScrapingTest'
 const URL_UI = 'http://localhost:3001/api/unifiedIndex/UI'
 const URL_parse = `https://parsehub.com/api/v2/projects/${env.promart_token_pintura}/last_ready_run/data?api_key=${env.api_key}`
 export default class SupplyController {
+	async getSupplies(req: Request, res: Response) {
+		try {
+			const supplies = await prisma.supply.findMany()
+			res.json(supplies)
+		} catch (error) {
+			console.log(error)
+			res.status(500).json({ error: 'Something went wrong' })
+		}
+	}
 	async getParseHub(req: Request, res: Response) {
 		try {
 			const dataUI = await axios.get(URL_UI)
