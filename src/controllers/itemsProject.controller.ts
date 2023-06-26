@@ -21,23 +21,70 @@ export default class ItemsProjectController {
 		}
 	}
 
-	async createItemProject(req: Request, res: Response) {
+	async createItemProjectForItemProject(req: Request, res: Response) {
 		try {
-			const { id } = req.params
-			const { name } = req.body
-			const itemProjectCreated = await prisma.projectItem.create({
-				data: {
-					name,
-					project: {
-						connect: {
-							id,
-						},
-					},
+			const { itemProjectId } = req.params
+			const { versionId } = req.params
+			const { name, measuring } = req.body
+
+			const existingItemProject = await prisma.projectItem.findUnique({
+				where: {
+					id: parseInt(itemProjectId),
 				},
 			})
+
+			const itemProjectCreated = await prisma.projectItem.create({
+				data: {
+					name: name,
+					budgetBlockVersion: {
+						connect: {
+							id: parseInt(versionId),
+						},
+					},
+					measuring,
+				},
+			})
+			if (itemProjectCreated) {
+				existingItemProject?.item_ids.push(itemProjectCreated.id.toString())
+			}
+
 			res.status(200).json(itemProjectCreated)
 		} catch (error) {
-			res.status(400).json({ error, message: 'ItemProject created' })
+			res.status(400).json({ error, message: 'ItemProject was not created' })
+		}
+	}
+
+	async createNewItemProjectForATitle(req: Request, res: Response) {
+		try {
+			const { idTitle } = req.params
+			const { name, measuring } = req.body
+
+			const titleFound = await prisma.title.findUnique({ where: { id: idTitle } })
+
+			if (titleFound) {
+				const newItemProject = await prisma.projectItem.create({
+					data: {
+						name,
+						measuring,
+					},
+				})
+
+				if (newItemProject) {
+					await prisma.title.update({
+						where: {id:idTitle},
+						data: {
+							project_items: {
+								push: newItemProject.id
+							}
+						}
+					})
+					res.status(200).json({message: "Item project created!", newItemProject})
+				} else {
+					res.status(400).json('Something went wrong')
+				}
+			}
+		} catch (error) {
+			res.status(400).json({error, message:"Unable to create a new ItemProject for a title"})
 		}
 	}
 

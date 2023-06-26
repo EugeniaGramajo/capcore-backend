@@ -8,6 +8,8 @@ titleRouter.get('/', titleController.getAllTitle)
 
 titleRouter.get('/:id', titleController.getTitleById)
 
-titleRouter.post('/:id', titleController.createNewTitle)
+titleRouter.post('/:subBudgetId', titleController.createNewTitle)
+
+titleRouter.post('/toTitle/:titleId', titleController.createTitleForTitle)
 
 export default titleRouter

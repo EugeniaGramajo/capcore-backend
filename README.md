@@ -58,6 +58,18 @@
 
 - `DELETE - /subBudget/` delete a subbudget
 
+### TITLE
+
+- `GET - /title/` get all titles
+
+- `GET - /title/:id` get title by id
+
+- `POST - /title/:subBudgetId` create a title connected with a subbdget
+
+- `POST - /title/toTitle/:titleId` create a new title and save it in the title_ids array of the paret title
+
+- `PUT - /title/`
+
 ## how to run
 
 - pull corresponding and `npm i`
