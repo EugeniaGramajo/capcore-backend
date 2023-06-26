@@ -1,6 +1,7 @@
 import prisma from '@/config/prisma-client.config'
 import ProjectPermission from '@/utils/interfaces'
 import { Request, Response } from 'express'
+import { titleRecursive } from '@/utils/recursive.functions'
 
 export default class ProjectsController {
 	async getAllProjects(req: Request, res: Response) {
@@ -14,39 +15,130 @@ export default class ProjectsController {
 
 	async getProjectById(req: Request, res: Response) {
 		try {
-		  const { id } = req.params;
-	  
-		  const projectById = await prisma.project.findUnique({
-			where: {
-			  id: id?.toString(),
-			},
-			include: {
-			  budget_blocks: {
-				include: {
-				  versions: {
-					include: {
-						subBudgets: {
-							include : {
-								titles:true
-							}
-						}
-					}
-				  },
+			const { id } = req.params
+
+			const projectById = await prisma.project.findUnique({
+				where: {
+					id: id?.toString(),
 				},
-			  },
-			},
-		  });
-	  
-		  if (!projectById) {
-			res.status(404).json({ message: 'Project not found!' });
-		  } else {
-			res.status(200).json(projectById);
-		  }
+				include: {
+					budget_blocks: {
+						include: {
+							versions: {
+								include: {
+									subBudgets: {
+										include: {
+											titles: true,
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			})
+
+			if (!projectById) {
+				return res.status(404).json({ message: 'Project not found!' })
+			}
+
+			const updatedBudgetBlocks = await Promise.all(
+				projectById.budget_blocks.map(async (block) => {
+					const updatedVersions = await Promise.all(
+						block.versions.map(async (version) => {
+							const updatedSubBudgets = await Promise.all(
+								version.subBudgets.map(async (subBudget) => {
+									const updatedTitles = await Promise.all(
+										subBudget.titles.map(async (title) => {
+											const updatedTitle = await titleRecursive(title.id)
+											return updatedTitle
+										})
+									)
+									subBudget.titles = updatedTitles
+									return subBudget
+								})
+							)
+							version.subBudgets = updatedSubBudgets
+							return version
+						})
+					)
+					block.versions = updatedVersions
+					return block
+				})
+			)
+
+			projectById.budget_blocks = updatedBudgetBlocks
+
+			res.status(200).json(projectById)
 		} catch (error) {
-		  res.status(400).json({ error, message: 'An error has occurred' });
+			res.status(400).json({ error, message: 'An error has occurred' })
 		}
-	  }
-	  
+	}
+
+	async getProjectDataByVersion(req: Request, res: Response){
+			try {
+				const { projectId } = req.params
+				const { versionId } = req.params
+	
+				const projectById = await prisma.project.findUnique({
+					where: {
+						id: projectId?.toString(),
+					},
+					include: {
+						budget_blocks: {
+							include: {
+								versions: {
+									where: { id: parseInt(versionId) },
+									include: {
+										subBudgets: {
+											include: {
+												titles: true,
+											},
+										},
+									},
+								},
+							},
+						},
+					},
+				})
+	
+				if (!projectById) {
+					return res.status(404).json({ message: 'Project not found!' })
+				}
+	
+				const updatedBudgetBlocks = await Promise.all(
+					projectById.budget_blocks.map(async (block) => {
+						const updatedVersions = await Promise.all(
+							block.versions.map(async (version) => {
+								const updatedSubBudgets = await Promise.all(
+									version.subBudgets.map(async (subBudget) => {
+										const updatedTitles = await Promise.all(
+											subBudget.titles.map(async (title) => {
+												const updatedTitle = await titleRecursive(title.id)
+												return updatedTitle
+											})
+										)
+										subBudget.titles = updatedTitles
+										return subBudget
+									})
+								)
+								version.subBudgets = updatedSubBudgets
+								return version
+							})
+						)
+						block.versions = updatedVersions
+						return block
+					})
+				)
+	
+				projectById.budget_blocks = updatedBudgetBlocks
+	
+				res.status(200).json(projectById)
+			} catch (error) {
+				res.status(400).json({ error, message: 'An error has occurred' })
+			}
+		
+	}
 
 	async createProject(req: Request, res: Response) {
 		try {
