@@ -29,6 +29,7 @@ export default class ProjectsController {
 									subBudgets: {
 										include: {
 											titles: true,
+
 										},
 									},
 								},

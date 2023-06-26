@@ -16,7 +16,7 @@ model Client {
   address       String
   district      String
   province      String
-  departament   String
+  department   String
   business_name String
   image         String @default("https://icons.veryicon.com/png/o/internet--web/prejudice/user-128.png")
   RUC           Int
@@ -152,7 +152,7 @@ model Title {
   name           String
   project_items  Int[]
   title_ids      String[]
-
+  child_projectItem Json[]
 
   parent_title   Title?        @relation("ChildTitles", fields: [title_id], references: [id])
   title_id       String?
@@ -195,7 +195,7 @@ model ProjectItem {
   name String
   measuring   Int?
 
-  item_ids     String[]
+  item_ids     Int[]
   supply_ids   String[]
 
   title_id     String?

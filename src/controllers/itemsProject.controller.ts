@@ -24,7 +24,6 @@ export default class ItemsProjectController {
 	async createItemProjectForItemProject(req: Request, res: Response) {
 		try {
 			const { itemProjectId } = req.params
-			const { versionId } = req.params
 			const { name, measuring } = req.body
 
 			const existingItemProject = await prisma.projectItem.findUnique({
@@ -36,16 +35,20 @@ export default class ItemsProjectController {
 			const itemProjectCreated = await prisma.projectItem.create({
 				data: {
 					name: name,
-					budgetBlockVersion: {
-						connect: {
-							id: parseInt(versionId),
-						},
-					},
 					measuring,
 				},
 			})
-			if (itemProjectCreated) {
-				existingItemProject?.item_ids.push(itemProjectCreated.id.toString())
+
+			if (itemProjectCreated && existingItemProject) {
+				existingItemProject.item_ids.push(itemProjectCreated.id)
+				await prisma.projectItem.update({
+					where: {
+						id: existingItemProject.id,
+					},
+					data: {
+						item_ids: existingItemProject.item_ids,
+					},
+				})
 			}
 
 			res.status(200).json(itemProjectCreated)
@@ -71,20 +74,20 @@ export default class ItemsProjectController {
 
 				if (newItemProject) {
 					await prisma.title.update({
-						where: {id:idTitle},
+						where: { id: idTitle },
 						data: {
 							project_items: {
-								push: newItemProject.id
-							}
-						}
+								push: newItemProject.id,
+							},
+						},
 					})
-					res.status(200).json({message: "Item project created!", newItemProject})
+					res.status(200).json({ message: 'Item project created!', newItemProject })
 				} else {
 					res.status(400).json('Something went wrong')
 				}
 			}
 		} catch (error) {
-			res.status(400).json({error, message:"Unable to create a new ItemProject for a title"})
+			res.status(400).json({ error, message: 'Unable to create a new ItemProject for a title' })
 		}
 	}
 

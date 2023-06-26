@@ -7,35 +7,40 @@ export class ClientController {
 			const {
 				name,
 				district,
+				address,
 				province,
-				departament,
+				department,
 				business_name,
 				RUC,
+				image,
 				contact,
-				userId
+				user_id
 			} = req.body
 			if (
 				!name ||
 				!district ||
+				!address ||
 				!province ||
-				!departament ||
+				!department ||
 				!business_name ||
 				!RUC ||
 				!contact ||
-				!userId
+				!user_id
 			) {
 				return res.status(400).json({ error: 'Missing fields' })
 			}
 			const client = await prisma.client.create({
 				data: {
 					name,
+					address,
 					district,
 					province,
-					departament,
+					department,
 					business_name,
 					RUC,
+					image,
 					contact,
-					user: { connect: { id: userId } }
+					user: { connect: { id: user_id } }
 				}
 			})
 
@@ -84,7 +89,7 @@ export class ClientController {
 
 	async updateClient(req: Request, res: Response) {
 		const { id } = req.params
-		const { name, district, province, departament, business_name, RUC, contact, userId } = req.body
+		const { name, district, province, department, business_name, RUC, contact, user_id } = req.body
 
 		try {
 			const updatedClient = await prisma.client.update({
@@ -93,11 +98,11 @@ export class ClientController {
 					name,
 					district,
 					province,
-					departament,
+					department,
 					business_name,
 					RUC,
 					contact,
-					user: { connect: { id: userId } }
+					user: { connect: { id: user_id } }
 				},
 				include: {
 					user: true,
