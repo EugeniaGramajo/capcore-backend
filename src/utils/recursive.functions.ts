@@ -1,5 +1,5 @@
 import prisma from "@/config/prisma-client.config";
-import { ProjectItem, Title } from "@prisma/client";
+import { ProjectItem,  Title } from "@prisma/client";
 
 export async function titleRecursive(id: string): Promise<Title> {
   const titleFound = await prisma.title.findUnique({ where: { id }, include: { child_titles: true } });
@@ -53,3 +53,18 @@ export async function itemProjectRecursive(id: number): Promise<ProjectItem> {
 
   return itemProject;
 }
+
+
+
+export async function transferChildData(titleToDelete : Title, newParent:Title  ) {
+  const copiedTitleIds = [...newParent.title_ids, ...titleToDelete.title_ids];
+  const copiedProjectItems = [...newParent.project_items, ...titleToDelete.project_items];
+  
+  await prisma.title.update({
+    where: { id: newParent.id },
+    data: {
+    title_ids: copiedTitleIds,
+    project_items: copiedProjectItems,
+    },
+  });
+  }
