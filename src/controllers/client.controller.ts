@@ -12,7 +12,9 @@ export class ClientController {
 				business_name,
 				RUC,
 				contact,
-				userId
+				userId,
+				address,
+				image
 			} = req.body
 			if (
 				!name ||
@@ -30,15 +32,16 @@ export class ClientController {
 				data: {
 					name,
 					district,
+					address,
 					province,
 					departament,
 					business_name,
 					RUC,
 					contact,
+					image,
 					user: { connect: { id: userId } }
 				}
 			})
-
 			res.status(201).json(client)
 		} catch (error) {
 			console.log(error)
@@ -84,7 +87,18 @@ export class ClientController {
 
 	async updateClient(req: Request, res: Response) {
 		const { id } = req.params
-		const { name, district, province, departament, business_name, RUC, contact, userId } = req.body
+		const {
+			name,
+			district,
+			province,
+			departament,
+			business_name,
+			RUC,
+			contact,
+			userId,
+			image,
+			address
+		} = req.body
 
 		try {
 			const updatedClient = await prisma.client.update({
@@ -97,6 +111,8 @@ export class ClientController {
 					business_name,
 					RUC,
 					contact,
+					image,
+					address,
 					user: { connect: { id: userId } }
 				},
 				include: {
