@@ -19,7 +19,7 @@ model Client {
   department   String
   business_name String
   image         String @default("https://icons.veryicon.com/png/o/internet--web/prejudice/user-128.png")
-  RUC           Int
+  RUC           String
   contact       Json
 
   created_at DateTime @default(now())
@@ -79,10 +79,12 @@ model Project {
   code           String
   direct_cost    Int
   status         ProjectStatus @default(progress)
+  type           String
   address        String
   district       String
   province       String
   department     String
+  description    String
   initial_budget Float
   workday        Int
 
