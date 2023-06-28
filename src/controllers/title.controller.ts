@@ -92,13 +92,13 @@ export default class TitleController {
 		}
 	}
 
-	async commonDelete(req:Request, res:Response) {
+	async commonDelete(req: Request, res: Response) {
 		try {
-			const {id} = req.params
-			await prisma.title.delete({where:{id}})
-			res.status(200).json("Title deleted")
+			const { id } = req.params
+			await prisma.title.delete({ where: { id } })
+			res.status(200).json('Title deleted')
 		} catch (error) {
-			res.status(400).json("An error has occurred")
+			res.status(400).json('An error has occurred')
 		}
 	}
 
@@ -210,84 +210,44 @@ export default class TitleController {
 				})
 
 				console.log(titleHasFound, id)
-				const auxTitle = titleHasFound?.title_ids 
-				const auxItemProject = titleHasFound?.project_items 
-				let newAuxTitle = auxTitle ? parentFound.title_ids.concat(auxTitle) : parentFound.title_ids;
-				const newAuxItemProject = auxItemProject ? parentFound.project_items.concat(auxItemProject) : parentFound.project_items;
-			  
-				if(newAuxTitle.includes(id)){
-					newAuxTitle = newAuxTitle.filter(e=> e===id)
+				const auxTitle = titleHasFound?.title_ids
+				const auxItemProject = titleHasFound?.project_items
+				let newAuxTitle = auxTitle ? parentFound.title_ids.concat(auxTitle) : parentFound.title_ids
+				const newAuxItemProject = auxItemProject
+					? parentFound.project_items.concat(auxItemProject)
+					: parentFound.project_items
+
+				if (newAuxTitle.includes(id)) {
+					newAuxTitle = newAuxTitle.filter((e) => e !== id)
 				}
 				const position = titleHasFound?.title_ids.findIndex((obj) => obj === id)
-				console.log(position===0, newAuxTitle,newAuxItemProject)
-				if ( position === 0 ) {
-					console.log("entre al if")
+				console.log(position === 0, newAuxTitle, newAuxItemProject)
+				if (position === 0) {
+					console.log('entre al if')
 					const auxId = titleHasFound?.title_ids[1]
 
 					if (!auxId) {
-						console.log("No tengo hermanos")
-						
-						await prisma.title.update({ where: { id: parentFound.title_id }, data: {
-							title_ids: newAuxTitle,
-							project_items: newAuxItemProject
-						} })
-						await prisma.title.delete({where: {id}})
-						res.status(200).json("Title that belongs to a title has been deleted")
-					}else {
-						res.status(200).json("No esta en la posicion 0")
+						console.log('No tengo hermanos')
+
+						await prisma.title.update({
+							where: { id: parentFound.title_id },
+							data: {
+								title_ids: newAuxTitle,
+								project_items: newAuxItemProject,
+								title_id:{
+									
+								}
+							},
+						})
+						await prisma.title.delete({ where: { id } })
+						res.status(200).json('Title that belongs to a title has been deleted')
+					} else {
+						res.status(200).json('No esta en la posicion 0')
 					}
-
-					/* 						if (auxId) {
-							const original = await prisma.title.findUnique({ where: { id: auxId } })
-							if (original) {
-								const copiedTitleIds = [...original.title_ids] // Copia del array de title_ids
-								const copiedProjectItems = [...original.project_items] // Copia del array de project_items
-
-								copiedTitleIds.push(...auxTitle)
-								copiedProjectItems.push(...auxItemProject)
-								await prisma.title.update({
-									where: { id: auxId },
-									data: {
-										title_ids: copiedTitleIds,
-										project_items: copiedProjectItems,
-									},
-								})
-								await prisma.title.delete({ where: { id } })
-
-								res.status(200).json({ message: 'Title deleted successfully' })
-							} else {
-								return res.status(400).json("Can't delete this title")
-							}
-						}
-					} else if (position && position > 0) {
-						const auxId = titleHasFound?.child_titles[0].id
-						if (auxId !== undefined) {
-							const original = await prisma.title.findUnique({ where: { id: auxId } })
-							if (original) {
-								const copiedTitleIds = [...original.title_ids] // Copia del array de title_ids
-								const copiedProjectItems = [...original.project_items] // Copia del array de project_items
-
-								copiedTitleIds.push(...auxTitle)
-								copiedProjectItems.push(...auxItemProject)
-								await prisma.title.update({
-									where: { id: auxId },
-									data: {
-										title_ids: copiedTitleIds,
-										project_items: copiedProjectItems,
-									},
-								})
-								await prisma.title.delete({ where: { id } })
-
-								res.status(200).json({ message: 'Title deleted successfully' })
-							} else {
-								return res.status(400).json("Can't delete this title")
-							}
-						}
-						res.status(400).json('Something went wrong')*/
 				}
 			} else {
 				res.status(400).json('Invalid title')
-			}
+			} /* res.status(200).json("No esta en la posicion 0 ??") */
 		} catch (error) {
 			res.status(400).json({ error, message: 'Unable to delete the title' })
 		}

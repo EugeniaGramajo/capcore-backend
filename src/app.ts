@@ -3,6 +3,7 @@ import express from 'express'
 import cors from 'cors'
 import morgan from 'morgan'
 import { readdirSync } from 'fs'
+import { startScheduler } from './helpers/scheduler'
 
 const app = express()
 
@@ -10,7 +11,7 @@ app.use(cors({ credentials: true }))
 app.use(morgan('dev'))
 app.use(express.json())
 injectRoutes(app)
-
+startScheduler()
 export default app
 
 function injectRoutes(appInstance: express.Application) {
