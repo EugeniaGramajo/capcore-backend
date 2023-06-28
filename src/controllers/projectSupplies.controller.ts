@@ -22,7 +22,7 @@ export default class ProjectSupplyController {
 				measurement_unit,
 				type,
 				source_supply_id,
-				project_id,
+				version_id,
 				unified_index_id
 			} = req.body
 
@@ -34,7 +34,7 @@ export default class ProjectSupplyController {
 				measurement_unit,
 				type,
 				source_supply_id,
-				project_id,
+				version_id,
 				unified_index_id
 			}
 
@@ -80,7 +80,7 @@ export default class ProjectSupplyController {
 				measurement_unit,
 				type,
 				source_supply_id,
-				project_id
+				version_id
 			} = req.body
 
 			const existingProjectSupply = await prisma.projectSupply.findUnique({
@@ -101,7 +101,7 @@ export default class ProjectSupplyController {
 				measurement_unit: measurement_unit || existingProjectSupply.measurement_unit,
 				type: type || existingProjectSupply.type,
 				source_supply_id: source_supply_id || existingProjectSupply.source_supply_id,
-				project_id: project_id || existingProjectSupply.project_id
+				version_id: version_id || existingProjectSupply.version_id
 			}
 
 			const updatedProjectSupply = await prisma.projectSupply.update({

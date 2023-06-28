@@ -95,7 +95,6 @@ model Project {
   client    Client? @relation(fields: [client_id], references: [id])
   client_id String?
 
-  supplies             ProjectSupply[]
   budget_blocks        BudgetBlock[]
   budget_block_version BudgetBlockVersion[]
 }
@@ -132,6 +131,7 @@ model BudgetBlockVersion {
   budget_block_id String?
   subBudgets SubBudget[]
   projectItems ProjectItem[]
+  projectSupplies ProjectSupply[]
 }
 
 model SubBudget {
@@ -165,7 +165,6 @@ model Title {
   UserItem       UserItem[]
 
 }
-
 
 model Item {
   id   Int    @id @default(autoincrement())
@@ -243,8 +242,8 @@ model ProjectSupply {
 
   unified_index    UnifiedIndex? @relation(fields: [unified_index_id], references: [id])
   unified_index_id String?
-  project          Project?      @relation(fields: [project_id], references: [id])
-  project_id       String
+  version BudgetBlockVersion? @relation(fields: [version_id], references: [id])
+  version_id  Int
 }
 
 model UserSupply {
