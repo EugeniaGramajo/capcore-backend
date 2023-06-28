@@ -271,8 +271,8 @@ model UserSupply {
 
 model UnifiedIndex {
   id    String @id @default(uuid())
-  name  String
-  index Int
+  name  String @unique
+  index Int @unique
 
   supplies        Supply[]
   userSupplies    UserSupply[]
