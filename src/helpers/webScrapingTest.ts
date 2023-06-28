@@ -39,7 +39,7 @@ export const getPinturaPromartScrapping = async (): Promise<any> => {
 			const data = await runProject(API_KEY, PROMART_TOKEN_PINTURA)
 			const UI = await prisma.unifiedIndex.findFirst({
 				where: {
-					name: 'Pintura'
+					index: 54
 				}
 			})
 			let infoSupply = data.product.map(function(supply: any) {
@@ -80,7 +80,7 @@ export const getCementoPromartScrapping = async (): Promise<any> => {
 			const dataClean = data.product.filter((supply: any) => supply?.price !== undefined)
 			const UI = await prisma.unifiedIndex.findFirst({
 				where: {
-					name: 'Cemento'
+					index: 20
 				}
 			})
 			let infoSupply = dataClean.map(function(supply: any) {
@@ -121,7 +121,7 @@ export const getLadrilloPromartScrapping = async (): Promise<any> => {
 			const dataClean = data.product.filter((supply: any) => supply?.price !== undefined)
 			const UI = await prisma.unifiedIndex.findFirst({
 				where: {
-					name: 'Ladrillo'
+					index: 17
 				}
 			})
 			let infoSupply = dataClean.map(function(supply: any) {
