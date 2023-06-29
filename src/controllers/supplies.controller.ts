@@ -3,11 +3,13 @@ import axios from 'axios'
 import { Request, Response } from 'express'
 import prisma from '../config/prisma-client.config'
 const URL_UI = 'http://localhost:3001/api/unifiedIndex/UI'
-const URL_parse = `https://parsehub.com/api/v2/projects/${env.promart_token_pintura}/last_ready_run/data?api_key=${env.api_key}`
+const URL_parse = `https://parsehub.com/api/v2/projects/${env.promart_token_pintura}/last_ready_run/data?api_key=${env.api_key_cintia}`
 export default class SupplyController {
 	async getSupplies(req: Request, res: Response) {
 		try {
-			const supplies = await prisma.supply.findMany()
+			const supplies = await prisma.supply.findMany({include:{
+				unifiedindex:true
+			}})
 			res.json(supplies)
 		} catch (error) {
 			console.log(error)
@@ -74,6 +76,14 @@ export default class SupplyController {
 			res.json(supply)
 		} catch (error) {
 			res.status(400).json({ error })
+		}
+	}
+	async getSuppliesScrapping(req: Request, res: Response){
+		try {
+			const supply = await prisma.supplyFromWebScrapping.findMany()
+			res.status(200).json(supply)
+		} catch (error) {
+			res.status(400).json("asiuda")
 		}
 	}
 }

@@ -144,7 +144,7 @@ export default class ProjectsController {
 	async createProject(req: Request, res: Response) {
 		try {
 			const dataProject = req.body
-
+			console.log(dataProject)
 			const project = await prisma.project.create({
 				data: {
 					...dataProject,
@@ -155,7 +155,7 @@ export default class ProjectsController {
 					},
 				},
 			})
-
+			console.log(project)
 			const budgetBlock = await prisma.budgetBlock.create({
 				data: {
 					code: '01',
@@ -166,7 +166,7 @@ export default class ProjectsController {
 					},
 				},
 			})
-
+			console.log(budgetBlock)
 			const budgetBlockVersion = await prisma.budgetBlockVersion.create({
 				data: {
 					name: dataProject.name,
@@ -183,13 +183,23 @@ export default class ProjectsController {
 					},
 				},
 			})
-
+			console.log(budgetBlockVersion)
 			res.status(200).json({
 				message: 'Project creation succeeded!',
 				project: { ...project, budgetBlock, budgetBlockVersion },
 			})
 		} catch (error) {
 			res.status(400).json({ error, message: 'Unable to create a new project' })
+		}
+	}
+
+	async getUserProjects(req: Request, res: Response){
+		try {
+			const { id } = req.params
+			const userProjects = await prisma.project.findMany({where:{author_id: id}})
+			res.status(200).json(userProjects)
+		} catch (error) {
+			res.status(400).json("something went wrong")
 		}
 	}
 
