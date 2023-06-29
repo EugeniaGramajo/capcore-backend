@@ -1,11 +1,14 @@
 import app from './app'
 import env from './config/env.config'
+import { createUnifiedIndexes } from './helpers/createUnifiedIndex'
+import { startScheduler } from './helpers/scheduler'
+import { getAllDataCreated } from './helpers/webScrapingTest'
 
 app.listen(env.port, async () => {
 	try {
-		/*
-    This is where you can run any initialization logic needed for your Express app.
-    */
+		startScheduler()
+		createUnifiedIndexes()
+		getAllDataCreated()
 		console.log(`Ready on http://localhost:${env.port}`)
 	} catch (error) {
 		console.log('ERROR:', error)

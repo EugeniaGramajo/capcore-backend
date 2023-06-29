@@ -45,6 +45,7 @@ model User {
   email             String  @unique
   pw_hash           String  @unique
   company           String?
+  phone             String?
   business_name     String?
   profession        String?
   RUC               Int?
@@ -75,6 +76,7 @@ model Project {
   id             String        @id @default(uuid())
   name           String
   permissions    Json
+  image          String @default("https://apps.regionsanmartin.gob.pe:6443/AppDircetur/resources/img/notimage.png")
   currency       Currency
   code           String
   direct_cost    Int
@@ -216,7 +218,7 @@ model Supply {
   id               String @id @default(uuid())
   name             String
   price            Float
-  image            String
+  image            String @default("https://apps.regionsanmartin.gob.pe:6443/AppDircetur/resources/img/notimage.png")
   url              String @unique
   measurement_unit String
   type             String
@@ -232,7 +234,7 @@ model ProjectSupply {
   id               String @id @default(uuid())
   name             String
   price            Float
-  image            String
+  image            String @default("https://apps.regionsanmartin.gob.pe:6443/AppDircetur/resources/img/notimage.png")
   url              String
   measurement_unit String
   type             String
@@ -252,7 +254,7 @@ model UserSupply {
   id               String @id @default(uuid())
   name             String
   price            Float
-  image            String
+  image            String @default("https://apps.regionsanmartin.gob.pe:6443/AppDircetur/resources/img/notimage.png")
   url              String
   measurement_unit String
   type             String
@@ -277,4 +279,15 @@ model UnifiedIndex {
   supplies        Supply[]
   userSupplies    UserSupply[]
   projectSupplies ProjectSupply[]
+}
+
+model SupplyFromWebScrapping {
+  id               String @id @default(uuid())
+  name             String
+  price            Float
+  image            String
+  url              String @unique
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 }
