@@ -86,4 +86,15 @@ export default class SupplyController {
 			res.status(400).json("asiuda")
 		}
 	}
+
+	async getAllSuppliesTheUserCanSelectForProjects(req: Request, res: Response){
+		try {
+			const {id}=req.params
+			const db = await prisma.supply.findMany()
+			const user = await prisma.userSupply.findMany({where:{user_id:id}})
+			res.status(200).json(db.concat(user))
+		} catch (error) {
+			res.status(400).json(error)
+		}
+	}
 }
