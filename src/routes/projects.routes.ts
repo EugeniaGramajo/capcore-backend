@@ -8,6 +8,8 @@ projectsRouter.get('/', projectsController.getAllProjects)
 
 projectsRouter.get('/:id', projectsController.getProjectById)
 
+projectsRouter.get('/user/:id', projectsController.getUserProjects)
+
 projectsRouter.get('/:projectId/:versionId', projectsController.getProjectDataByVersion)
 
 projectsRouter.post('/', projectsController.createProject)

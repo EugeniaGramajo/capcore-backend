@@ -26,6 +26,8 @@ export class UserController {
 			const user = await prisma.user.findUnique({
 				where: {
 					id: id
+				}, include:{
+					clients:true
 				}
 			})
 

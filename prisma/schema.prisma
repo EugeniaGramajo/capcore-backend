@@ -16,10 +16,10 @@ model Client {
   address       String
   district      String
   province      String
-  departament   String
+  department   String
   business_name String
   image         String @default("https://icons.veryicon.com/png/o/internet--web/prejudice/user-128.png")
-  RUC           Int
+  RUC           String
   contact       Json
 
   created_at DateTime @default(now())
@@ -45,6 +45,7 @@ model User {
   email             String  @unique
   pw_hash           String  @unique
   company           String?
+  phone             String?
   business_name     String?
   profession        String?
   RUC               Int?
@@ -75,14 +76,17 @@ model Project {
   id             String        @id @default(uuid())
   name           String
   permissions    Json
+  image          String @default("https://apps.regionsanmartin.gob.pe:6443/AppDircetur/resources/img/notimage.png")
   currency       Currency
   code           String
   direct_cost    Int
   status         ProjectStatus @default(progress)
+  type           String
   address        String
   district       String
   province       String
   department     String
+  description    String
   initial_budget Float
   workday        Int
 
@@ -151,7 +155,7 @@ model Title {
   name           String
   project_items  Int[]
   title_ids      String[]
-
+  child_projectItem Json[]
 
   parent_title   Title?        @relation("ChildTitles", fields: [title_id], references: [id])
   title_id       String?
@@ -192,8 +196,8 @@ model ProjectItem {
   name String
   measuring   Int?
 
-  item_ids   String[]
-  supply_ids String[]
+  item_ids     Int[]
+  supply_ids   String[]
 
   title_id     String?
   title        Title? @relation("TitleToProjectItems", fields: [title_id], references: [id])
@@ -214,7 +218,7 @@ model Supply {
   id               String @id @default(uuid())
   name             String
   price            Float
-  image            String
+  image            String @default("https://apps.regionsanmartin.gob.pe:6443/AppDircetur/resources/img/notimage.png")
   url              String @unique
   measurement_unit String
   type             String
@@ -230,7 +234,7 @@ model ProjectSupply {
   id               String @id @default(uuid())
   name             String
   price            Float
-  image            String
+  image            String @default("https://apps.regionsanmartin.gob.pe:6443/AppDircetur/resources/img/notimage.png")
   url              String
   measurement_unit String
   type             String
@@ -250,7 +254,7 @@ model UserSupply {
   id               String @id @default(uuid())
   name             String
   price            Float
-  image            String
+  image            String @default("https://apps.regionsanmartin.gob.pe:6443/AppDircetur/resources/img/notimage.png")
   url              String
   measurement_unit String
   type             String
@@ -269,10 +273,21 @@ model UserSupply {
 
 model UnifiedIndex {
   id    String @id @default(uuid())
-  name  String
-  index Int
+  name  String @unique
+  index Int @unique
 
   supplies        Supply[]
   userSupplies    UserSupply[]
   projectSupplies ProjectSupply[]
+}
+
+model SupplyFromWebScrapping {
+  id               String @id @default(uuid())
+  name             String
+  price            Float
+  image            String
+  url              String @unique
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 }

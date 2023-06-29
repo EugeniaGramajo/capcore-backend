@@ -12,4 +12,8 @@ titleRouter.post('/:subBudgetId', titleController.createNewTitle)
 
 titleRouter.post('/toTitle/:titleId', titleController.createTitleForTitle)
 
+titleRouter.get('/delete/:id', titleController.deleteTitle)
+
+titleRouter.delete('/:id', titleController.commonDelete)
+
 export default titleRouter
