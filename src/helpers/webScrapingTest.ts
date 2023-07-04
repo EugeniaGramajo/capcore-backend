@@ -61,17 +61,19 @@ export const getPinturaPromartScrapping = async (): Promise<any> => {
 					unifiedIndex_id: UI?.id
 				}
 			})
-			infoSupply.map(async (supply: any) => {
-				return await prisma.supply.upsert({
-					where: {
-						url: supply.url
-					},
-					update: {
-						...supply
-					},
-					create: supply
-				})
-			})
+			infoSupply = await Promise.all(infoSupply.map(async (supply: any) => {
+				await prisma.supply.upsert({
+				  where: {
+					url: supply.url
+				  },
+				  update: {
+					...supply
+				  },
+				  create: supply
+				});
+				return supply;
+			  }));
+			  
 			return infoSupply
 		} else {
 			throw new Error('API_KEY or PROMART_TOKEN_PINTURA not found')
@@ -103,17 +105,19 @@ export const getCementoPromartScrapping = async (): Promise<any> => {
 				}
 			})
 
-			infoSupply.map(async (supply: any) => {
-				return await prisma.supply.upsert({
-					where: {
-						url: supply.url
-					},
-					update: {
-						...supply
-					},
-					create: supply
-				})
-			})
+			infoSupply = await Promise.all(infoSupply.map(async (supply: any) => {
+				await prisma.supply.upsert({
+				  where: {
+					url: supply.url
+				  },
+				  update: {
+					...supply
+				  },
+				  create: supply
+				});
+				return supply;
+			  }));
+			  
 			return infoSupply
 		} else {
 			throw new Error('API_KEY or PROMART_TOKEN_PINTURA not found')
@@ -144,17 +148,19 @@ export const getLadrilloPromartScrapping = async (): Promise<any> => {
 				}
 			})
 
-			infoSupply.map(async (supply: any) => {
-				return await prisma.supply.upsert({
-					where: {
-						url: supply.url
-					},
-					update: {
-						...supply
-					},
-					create: supply
-				})
-			})
+			infoSupply = await Promise.all(infoSupply.map(async (supply: any) => {
+  await prisma.supply.upsert({
+    where: {
+      url: supply.url
+    },
+    update: {
+      ...supply
+    },
+    create: supply
+  });
+  return supply;
+}));
+
 			return infoSupply
 		} else {
 			throw new Error('API_KEY or PROMART_TOKEN_LADRILLOS not found')
@@ -179,17 +185,19 @@ try {
 				url: supply.url,
 			}
 		})
-		infoSupply.map(async (supply:any)=>{
-			 await prisma.supplyFromWebScrapping.upsert({
-				where: {
-					url: supply.url
-				},
-				update: {
-					...supply
-				},
-				create: supply
-			})
-		})
+		infoSupply = await Promise.all(infoSupply.map(async (supply: any) => {
+			await prisma.supplyFromWebScrapping.upsert({
+			  where: {
+				url: supply.url
+			  },
+			  update: {
+				...supply
+			  },
+			  create: supply
+			});
+			return supply;
+		  }));
+		  
 		
 		} else {
 			throw new Error('API_KEY_2 or FERRETERIA_JIREH not found')
@@ -208,17 +216,18 @@ try {
 				}
 			})
 			
-			infoSupply.map(async (supply:any)=>{
+			infoSupply = await Promise.all(infoSupply.map(async (supply: any) => {
 				await prisma.supplyFromWebScrapping.upsert({
-					where: {
-						url: supply.url
-					},
-					update: {
-						...supply
-					},
-					create: supply
-				})
-			})
+				  where: {
+					url: supply.url
+				  },
+				  update: {
+					...supply
+				  },
+				  create: supply
+				});
+				return supply;
+			  }));
 			} else {
 				throw new Error('API_KEY_2 or DATEL not found')
 			}
@@ -235,17 +244,18 @@ try {
 					}
 				})
 				
-				infoSupply.map(async (supply:any)=>{
+				infoSupply = await Promise.all(infoSupply.map(async (supply: any) => {
 					await prisma.supplyFromWebScrapping.upsert({
-						where: {
-							url: supply.url
-						},
-						update: {
-							...supply
-						},
-						create: supply
-					})
-				})
+					  where: {
+						url: supply.url
+					  },
+					  update: {
+						...supply
+					  },
+					  create: supply
+					});
+					return supply;
+				  }));
 				} else {
 					throw new Error('API_KEY_2 or DATEL not found')
 				}
@@ -264,17 +274,18 @@ try {
 						}
 					})
 					
-					infoSupply.map(async (supply:any)=>{
+					infoSupply = await Promise.all(infoSupply.map(async (supply: any) => {
 						await prisma.supplyFromWebScrapping.upsert({
-							where: {
-								url: supply.url
-							},
-							update: {
-								...supply
-							},
-							create: supply
-						})
-					})
+						  where: {
+							url: supply.url
+						  },
+						  update: {
+							...supply
+						  },
+						  create: supply
+						});
+						return supply;
+					  }));
 					} else {
 						throw new Error('API_KEY_2 or DATEL not found')
 					}
