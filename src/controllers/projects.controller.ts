@@ -199,7 +199,7 @@ export default class ProjectsController {
 	async getUserProjects(req: Request, res: Response){
 		try {
 			const { id } = req.params
-			const userProjects = await prisma.project.findMany({where:{author_id: id}})
+			const userProjects = await prisma.project.findMany({where:{author_id: id},include:{client:true}})
 			res.status(200).json(userProjects)
 		} catch (error) {
 			res.status(400).json("something went wrong")
