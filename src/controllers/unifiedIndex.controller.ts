@@ -13,7 +13,6 @@ export default class UnifiedIndexController{
     async postUnifiedIndex(req: Request, res: Response) {
         try{
             const { name, index } = req.body
-            console.log('body', req.body)
             const unifiedIndexData = {
                 name,
                 index
@@ -23,7 +22,6 @@ export default class UnifiedIndexController{
             })
             res.json(unifiedIndex)
         } catch(error) {
-            console.log(error)
             res.status(400).json({ error: 'Something went wrong' })
         }
     }
