@@ -7,7 +7,7 @@
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"dev": "tsnd --respawn --rs --cls -r tsconfig-paths/register src/main.ts",
 		"build": "tsc && tsc-alias",
-		"build-start": "npm i && npm run prisma:db:push && npm run build && npm start",
+		"build-start": "npm i && npx prisma db push && npm run build && npm start",
 		"start": "node dist/src/main.js"
 	},
 	"license": "ISC",
