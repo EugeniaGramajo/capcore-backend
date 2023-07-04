@@ -1,4 +1,5 @@
 import prisma from '@/config/prisma-client.config';
+import { titleRecursive } from '@/utils/recursive.functions';
 import { Request, Response } from 'express';
 
 export default class BudgetBlockVersionController {
@@ -23,11 +24,35 @@ export default class BudgetBlockVersionController {
         return res.status(400).json({ message: 'Invalid id. Must be a number.' });
       }
   
-      const budgetBlockVersion = await prisma.budgetBlockVersion.findUnique({ where: { id: idNumber } });
+      const budgetBlockVersion = await prisma.budgetBlockVersion.findUnique({
+        where: { id: idNumber },
+        include: {
+          subBudgets: {
+            include: {
+              titles: true,
+            },
+          },
+        },
+      });
   
       if (!budgetBlockVersion) {
         return res.status(404).json({ message: 'BudgetBlock version not found' });
       }
+  
+      const updatedSubBudgets = await Promise.all(
+        budgetBlockVersion.subBudgets.map(async (subBudget) => {
+          const updatedTitles = await Promise.all(
+            subBudget.titles.map(async (title) => {
+              const updatedTitle = await titleRecursive(title.id);
+              return updatedTitle;
+            })
+          );
+          subBudget.titles = updatedTitles;
+          return subBudget;
+        })
+      );
+  
+      budgetBlockVersion.subBudgets = updatedSubBudgets;
   
       res.status(200).json(budgetBlockVersion);
     } catch (error) {
