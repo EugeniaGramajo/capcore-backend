@@ -37,7 +37,7 @@ const runProject = async (api_key: string, project_key: string) => {
 			}
 		}
 	} catch (error) {
-		console.error(error)
+		throw new Error("Aiuda")
 	}
 }
 
@@ -77,7 +77,7 @@ export const getPinturaPromartScrapping = async (): Promise<any> => {
 			throw new Error('API_KEY or PROMART_TOKEN_PINTURA not found')
 		}
 	} catch (e) {
-		console.log(e)
+		throw new Error("Aiuda")
 	}
 }
 
@@ -119,7 +119,7 @@ export const getCementoPromartScrapping = async (): Promise<any> => {
 			throw new Error('API_KEY or PROMART_TOKEN_PINTURA not found')
 		}
 	} catch (e) {
-		console.log(e)
+		throw new Error("Aiuda")
 	}
 }
 export const getLadrilloPromartScrapping = async (): Promise<any> => {
@@ -160,7 +160,7 @@ export const getLadrilloPromartScrapping = async (): Promise<any> => {
 			throw new Error('API_KEY or PROMART_TOKEN_LADRILLOS not found')
 		}
 	} catch (e) {
-		console.log(e)
+		throw new Error("Aiuda")
 	}
 }
 export const getAllDataCreated = async (): Promise<any> =>{
@@ -282,7 +282,6 @@ try {
 			console.log("all data created")
 			return "all data created"
 } catch (error) {
-	console.log(error)
-	return 
+	throw new Error("Aiuda")
 }
 }
