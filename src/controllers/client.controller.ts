@@ -88,7 +88,7 @@ export class ClientController {
 
 	async updateClient(req: Request, res: Response) {
 		const { id } = req.params
-		const { name, district, province, department, business_name, RUC, contact, user_id } = req.body
+		const { name, district, province, department, image, business_name, RUC, contact, user_id } = req.body
 
 		try {
 			const updatedClient = await prisma.client.update({
@@ -97,6 +97,7 @@ export class ClientController {
 					name,
 					district,
 					province,
+					image,
 					department,
 					business_name,
 					RUC,
