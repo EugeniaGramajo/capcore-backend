@@ -6,7 +6,9 @@ import { titleRecursive } from '@/utils/recursive.functions'
 export default class ProjectsController {
 	async getAllProjects(req: Request, res: Response) {
 		try {
-			const allProjects = await prisma.project.findMany()
+			const allProjects = await prisma.project.findMany({include: {
+				client:true
+			}})
 			res.status(200).json(allProjects)
 		} catch (error) {
 			res.status(400).json(error)
@@ -22,6 +24,7 @@ export default class ProjectsController {
 					id: id?.toString(),
 				},
 				include: {
+					client:true,
 					budget_blocks: {
 						include: {
 							versions: {
