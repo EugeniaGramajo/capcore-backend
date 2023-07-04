@@ -90,8 +90,10 @@ export default class SupplyController {
 	async getAllSuppliesTheUserCanSelectForProjects(req: Request, res: Response){
 		try {
 			const {id}=req.params
-			const db = await prisma.supply.findMany()
-			const user = await prisma.userSupply.findMany({where:{user_id:id}})
+			const db = await prisma.supply.findMany({include:{unifiedindex:true}})
+			const user = await prisma.userSupply.findMany({where:{user_id:id}, include:{
+				unifiedindex:true
+			}})
 			res.status(200).json(db.concat(user))
 		} catch (error) {
 			res.status(400).json(error)
