@@ -75,7 +75,7 @@ export class UserController {
 			res.json({ token, user })
 		} catch (error) {
 			console.log(error)
-			res.status(400).json({ error: 'Something went wrong' })
+			res.status(400).json(error)
 		}
 	}
 
