@@ -43,7 +43,7 @@ export class UserController {
 
 	async registerUser(req: Request, res: Response) {
 		try {
-			const { name, email, password, business_name, profession } = req.body
+			const { name, email, password } = req.body
 			// Verificar si ya existe un usuario con el mismo nombre de usuario o correo electrónico
 			const existingUser = await prisma.user.findFirst({
 				where: {
@@ -63,8 +63,6 @@ export class UserController {
 				name,
 				email,
 				pw_hash,
-				business_name,
-				profession,
 				verification_code: 0
 			}
 
